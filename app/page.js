@@ -1,6 +1,61 @@
 "use client";
 
+import { useEffect, useState } from 'react'
+
 export default function Home() {
+
+  const [message, setMessage] = useState('');
+  const [user, setUser] = useState('Someone')
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(!message) return;
+    // TODO: render the component here
+    renderBlob(message);
+    setMessage('');
+  }
+
+  const renderBlob = (message) => {
+    const msgerChat = document.querySelector(".msger-chat");
+    const msgHTML = `
+      <div className="msg right-msg">
+        <div className="msg-img" style={{backgroundImage : "url(${PERSON_IMG})"}}></div>
+        <div className="msg-bubble">
+          <div className="msg-info">
+            <div className="msg-info-name">${PERSON_NAME}</div>
+            <div className="msg-info-time">${formatDate(new Date())}</div>
+          </div>
+          <div className="msg-text">${message}</div>
+        </div>
+      </div>
+    `;
+    msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+    msgerChat.scrollTop += 500;
+    botResponse(message);
+  }
+
+  const botResponse = (message) => {
+    const msgerChat = document.querySelector(".msger-chat");
+    const msgHTML = `
+      <div className="msg right-msg">
+        <div className="msg-img" style={{backgroundImage : "url(${PERSON_IMG})"}}></div>
+        <div className="msg-bubble">
+          <div className="msg-info">
+            <div className="msg-info-name">${PERSON_NAME}</div>
+            <div className="msg-info-time">${formatDate(new Date())}</div>
+          </div>
+          <div className="msg-text">your message according to what you sent is : ${message}</div>
+        </div>
+      </div>
+    `;
+    msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+    msgerChat.scrollTop += 500;
+  }
 
   const handleThemeChange = () => {
     if (document.documentElement.classList.contains('dark')) {
@@ -10,25 +65,21 @@ export default function Home() {
     }
   }
 
+  const BOT_MSGS = [
+    "Hi, how are you?",
+    "Ohh... I can't understand what you trying to say. Sorry!",
+    "I like to play games... But I don't know how to play!",
+    "Sorry if my answers are not relevant. :))",
+    "I feel sleepy! :("
+  ];
 
-//   const msgerForm = get(".msger-inputarea");
-//   const msgerInput = get(".msger-input");
-//   const msgerChat = get(".msger-chat");
-//
-//   const BOT_MSGS = [
-//     "Hi, how are you?",
-//     "Ohh... I can't understand what you trying to say. Sorry!",
-//     "I like to play games... But I don't know how to play!",
-//     "Sorry if my answers are not relevant. :))",
-//     "I feel sleepy! :("
-//   ];
-//
-// // Icons made by Freepik from www.flaticon.com
-//   const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
-//   const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
-//   const BOT_NAME = "BOT";
-//   const PERSON_NAME = "Sajad";
-//
+// Icons made by Freepik from www.flaticon.com
+  const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
+  const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
+  const BOT_NAME = "BOT";
+  const PERSON_NAME = "Sajad";
+
+
 //   msgerForm.addEventListener("submit", event => {
 //     event.preventDefault();
 //
@@ -44,16 +95,16 @@ export default function Home() {
 //   function appendMessage(name, img, side, text) {
 //     //   Simple solution for small apps
 //     const msgHTML = `
-//     <div class="msg ${side}-msg">
-//       <div class="msg-img" style="background-image: url(${img})"></div>
+//     <div className="msg ${side}-msg">
+//       <div className="msg-img" style={{backgroundImage : "url(${img})"}}></div>
 //
-//       <div class="msg-bubble">
-//         <div class="msg-info">
-//           <div class="msg-info-name">${name}</div>
-//           <div class="msg-info-time">${formatDate(new Date())}</div>
+//       <div className="msg-bubble">
+//         <div className="msg-info">
+//           <div className="msg-info-name">${name}</div>
+//           <div className="msg-info-time">${formatDate(new Date())}</div>
 //         </div>
 //
-//         <div class="msg-text">${text}</div>
+//         <div className="msg-text">${text}</div>
 //       </div>
 //     </div>
 //   `;
@@ -77,12 +128,12 @@ export default function Home() {
 //     return root.querySelector(selector);
 //   }
 //
-//   function formatDate(date) {
-//     const h = "0" + date.getHours();
-//     const m = "0" + date.getMinutes();
-//
-//     return `${h.slice(-2)}:${m.slice(-2)}`;
-//   }
+  function formatDate(date) {
+    const h = "0" + date.getHours();
+    const m = "0" + date.getMinutes();
+
+    return `${h.slice(-2)}:${m.slice(-2)}`;
+  }
 //
 //   function random(min, max) {
 //     return Math.floor(Math.random() * (max - min) + min);
@@ -93,7 +144,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold text-blue-500 dark:text-red-500">
         Hello world!
       </h1>
-      <button href="#_" className="relative inline-block text-lg group" onClick={() => handleThemeChange()}>
+      <button className="relative inline-block text-lg group" onClick={() => handleThemeChange()}>
         <span className="relative z-10 block px-5 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
           <span className="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
           <span className="absolute left-0 w-48 h-48 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
@@ -149,8 +200,8 @@ export default function Home() {
           </div>
         </main>
 
-        <form className="msger-inputarea">
-          <input type="text" className="msger-input" placeholder="Enter your message..."/>
+        <form className="msger-inputarea" onSubmit={handleSubmit}>
+          <input type="text" className="msger-input" placeholder="Enter your message..." value={message} onChange={handleMessageChange}/>
           <button type="submit" className="msger-send-btn">Send</button>
         </form>
       </section>
