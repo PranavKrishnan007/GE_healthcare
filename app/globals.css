@@ -45,6 +45,20 @@ body {
     box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
 }
 
+.typewriter span {
+    visibility: hidden;
+    animation: type 0.1s linear forwards;
+}
+
+@keyframes type {
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: visible;
+    }
+}
+
 .msger-header {
     display: flex;
     justify-content: space-between;
