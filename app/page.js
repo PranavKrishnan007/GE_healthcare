@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import React from 'react';
 
 export default function Home() {
 
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState('Someone')
+  const [user, setUser] = useState('Someone');
+  const [messages, setMessages] = useState([]);
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
@@ -15,46 +17,62 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!message) return;
+    console.log(message);
     // TODO: render the component here
-    renderBlob(message);
+    addBlobMessage(message);
     setMessage('');
   }
 
-  const renderBlob = (message) => {
-    const msgerChat = document.querySelector(".msger-chat");
-    const msgHTML = `
-      <div className="msg right-msg">
-        <div className="msg-img" style={{backgroundImage : "url(${PERSON_IMG})"}}></div>
+  const addBlobMessage = (blobText) => {
+    setMessages(oldMessages => [
+      ...oldMessages,
+      <BlobMessage message={blobText} />,
+      <BotMessage message={blobText} />
+    ]);
+  };
+
+  function BotMessage ({ message }) {
+    return (
+      <div className="msg left-msg">
+        <div
+          className="msg-img"
+          style={{ backgroundImage: "url(https://image.flaticon.com/icons/svg/327/327779.svg)" }}
+        ></div>
+
         <div className="msg-bubble">
           <div className="msg-info">
-            <div className="msg-info-name">${PERSON_NAME}</div>
-            <div className="msg-info-time">${formatDate(new Date())}</div>
+            <div className="msg-info-name">BOT</div>
+            <div className="msg-info-time">{formatDate(new Date())}</div>
           </div>
-          <div className="msg-text">${message}</div>
+
+          <div className="msg-text">
+            what you responded is : {message}
+          </div>
         </div>
       </div>
-    `;
-    msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-    msgerChat.scrollTop += 500;
-    botResponse(message);
+    );
   }
 
-  const botResponse = (message) => {
-    const msgerChat = document.querySelector(".msger-chat");
-    const msgHTML = `
+  function BlobMessage({ message }) {
+    return (
       <div className="msg right-msg">
-        <div className="msg-img" style={{backgroundImage : "url(${PERSON_IMG})"}}></div>
+        <div
+          className="msg-img"
+          style={{ backgroundImage : `url(https://image.flaticon.com/icons/svg/145/145867.svg)`}}
+        ></div>
+
         <div className="msg-bubble">
           <div className="msg-info">
-            <div className="msg-info-name">${PERSON_NAME}</div>
-            <div className="msg-info-time">${formatDate(new Date())}</div>
+            <div className="msg-info-name">Someone</div>
+            <div className="msg-info-time">{formatDate(new Date())}</div>
           </div>
-          <div className="msg-text">your message according to what you sent is : ${message}</div>
+
+          <div className="msg-text">
+            {message}
+          </div>
         </div>
       </div>
-    `;
-    msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-    msgerChat.scrollTop += 500;
+    );
   }
 
   const handleThemeChange = () => {
@@ -198,6 +216,9 @@ export default function Home() {
               </div>
             </div>
           </div>
+          {messages.map((MessageComponent, index) =>
+            React.cloneElement(MessageComponent, { key: index })
+          )}
         </main>
 
         <form className="msger-inputarea" onSubmit={handleSubmit}>
