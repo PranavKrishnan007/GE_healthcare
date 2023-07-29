@@ -23,15 +23,18 @@ export default function Home() {
     setMessage(e.target.value);
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!message) return;
-    console.log(message);
-    // TODO: render the component here
     addBlobMessage(message);
     setMessage('');
   }
+
+  const handleSuggestionSubmit = async (suggestion) => {
+    await setMessage(suggestion);
+    handleSubmit({ preventDefault: () => {} });
+  }
+
 
   const addBlobMessage = (blobText) => {
     setMessages(oldMessages => [
@@ -133,6 +136,7 @@ export default function Home() {
     );
   }
 
+  // utils
   function formatDate(date) {
     const h = "0" + date.getHours();
     const m = "0" + date.getMinutes();
@@ -193,6 +197,25 @@ export default function Home() {
             React.cloneElement(MessageComponent, { key: index })
           )}
         </main>
+        <div className="flex flex-row items-center justify-center gap-2 p-4">
+          <div>Suggestions</div>
+          <button
+            className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"
+            onClick={() => handleSuggestionSubmit("amrita")}>
+            amrita
+          </button>
+          <button
+            className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"
+            onClick={() => handleSuggestionSubmit("amfoss")}>
+            amfoss
+          </button>
+          <button
+            className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"
+            onClick={() => handleSuggestionSubmit("registration")}>
+            registration
+          </button>
+        </div>
+
 
         <form className="msger-inputarea" onSubmit={handleSubmit}>
           <input type="text" className="msger-input" placeholder="Enter your message..." value={message} onChange={handleMessageChange}/>
