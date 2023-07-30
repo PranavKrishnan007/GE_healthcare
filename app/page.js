@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react';
 import React from 'react';
-import Topbar from '@/components/topbar'
 import TopBar from '@/components/topbar'
 
 export default function Home() {
