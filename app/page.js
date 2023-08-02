@@ -7,7 +7,6 @@ import TopBar from '@/components/topbar'
 export default function Home() {
 
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState('Someone');
   const [messages, setMessages] = useState([]);
   const msgerChat = useRef(null);
 
