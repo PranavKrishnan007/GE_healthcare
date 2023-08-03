@@ -40,7 +40,7 @@ const TopBar = () => {
       <h1 className="text-3xl font-bold text-blue-500 dark:text-red-500">
         AmFOSS Bot.
       </h1>
-      {isLoggedIn ? (
+      {user ? (
         <div className="relative group">
           <button className="font-semibold" onClick={() => setDropDown(!dropDown)}>Welcome, {user ? user.displayName.split(' ')[0] : "Guest"}</button>
           {dropDown && (
