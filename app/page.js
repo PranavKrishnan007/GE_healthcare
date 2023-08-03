@@ -32,9 +32,16 @@ export default function Home() {
     setMessage('');
   }
 
-  // const getMessages = async () => {
-  //
-  // }
+  const getMessages = async () => {
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    }
+    else {
+      console.log("No such document!");
+    }
+  }
 
   const setFireMessage = async (user) => {
     // Get the Firestore document for the authenticated user's uid
