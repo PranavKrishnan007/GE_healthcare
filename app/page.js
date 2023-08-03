@@ -3,9 +3,13 @@
 import { useEffect, useState, useRef } from 'react';
 import React from 'react';
 import TopBar from '@/components/topbar'
+import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+import { db } from '@/app/firebase'
+import { UserAuth } from '@/app/context/AuthContext'
 
 export default function Home() {
 
+  const { user } = UserAuth()
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const msgerChat = useRef(null);
@@ -27,6 +31,58 @@ export default function Home() {
     addBlobMessage(message);
     setMessage('');
   }
+
+  // const getMessages = async () => {
+  //
+  // }
+
+  const setFireMessage = async (user) => {
+    // Get the Firestore document for the authenticated user's uid
+    const userDocRef = doc(collection(db, "users"), user.uid);
+    console.log(user.uid)
+    try {
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      if (userDocSnapshot.exists()) {
+        console.log("exists");
+        // Do something if the document exists
+      } else {
+        console.log("not exists");
+        // Do something if the document does not exist
+      }
+    } catch (error) {
+      console.error("Error checking document:", error);
+    }
+  };
+
+  const updateFireMessage = async (message, user) => {
+    const userDocRef = doc(db, "users", user.uid); // Updated line here
+    console.log(userDocRef);
+    try {
+      const userDocSnapshot = await getDoc(userDocRef);
+
+      if (userDocSnapshot.exists()) {
+        try {
+          await updateDoc(userDocRef, {
+            messages: arrayUnion(message),
+          });
+          console.log("Document successfully updated!");
+        } catch (error) {
+          console.error("Error updating document:", error);
+        }
+      } else {
+        try {
+          await setDoc(userDocRef, { messages: [message] }); // Use setDoc instead of addDoc for updating or adding the document
+          console.log("First message added");
+        } catch (error) {
+          console.error("Error adding document:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking document:", error);
+    }
+  };
+
 
   const handleSuggestionSubmit = async (suggestion) => {
     await setMessage(suggestion);
@@ -111,7 +167,6 @@ export default function Home() {
   //     </div>
   //   );
   // }
-
   function BlobMessage({ message }) {
     return (
       <div className="msg right-msg">
@@ -213,7 +268,11 @@ export default function Home() {
             registration
           </button>
         </div>
-
+        <div className="flex flex-row w-full gap-10">
+          <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => setFireMessage(user)}>get user</button>
+          <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => updateFireMessage(message, user)}>update Messages</button>
+          <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={getMessages}>get Messages</button>
+        </div>
 
         <form className="msger-inputarea" onSubmit={handleSubmit}>
           <input type="text" className="msger-input" placeholder="Enter your message..." value={message} onChange={handleMessageChange}/>
