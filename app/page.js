@@ -3,13 +3,15 @@
 import { useEffect, useState, useRef } from 'react';
 import React from 'react';
 import TopBar from '@/components/topbar'
-import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import { db } from '@/app/firebase'
 import { UserAuth } from '@/app/context/AuthContext'
+import Image from 'next/image'
 
 export default function Home() {
 
   const { user } = UserAuth()
+  const [historySideBar, setHistorySideBar] = useState(true);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const msgerChat = useRef(null);
@@ -109,25 +111,14 @@ export default function Home() {
     const botResponse = BotResponse(message);
 
     const typing = botResponse.split('').map((char, index) => (
-      <span key={index} style={{animationDelay: index * 0.05 + 's'}}>{char}</span>
+      <span key={index} style={{animationDelay: index * 0.03 + 's'}}>{char}</span>
     ));
 
     return (
-      <div className="msg left-msg">
-        <div
-          className="msg-img"
-          style={{ backgroundImage: "url(https://image.flaticon.com/icons/svg/327/327779.svg)" }}
-        ></div>
-
-        <div className="msg-bubble">
-          <div className="msg-info">
-            <div className="msg-info-name">BOT</div>
-            <div className="msg-info-time">{formatDate(new Date())}</div>
-          </div>
-
-          <div className="msg-text typewriter">
-            {typing}
-          </div>
+      <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
+        <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
+        <div className="typewriter">
+          {typing}
         </div>
       </div>
     );
@@ -150,47 +141,12 @@ export default function Home() {
     return message;
   }
 
-  // function BlobMessage({ message }) {
-  //   const typing = message.split('').map((char, index) => (
-  //     <span key={index} style={{animationDelay: index * 0.1 + 's'}}>{char}</span>
-  //   ));
-  //
-  //   return (
-  //     <div className="msg right-msg">
-  //       <div className="msg-img"
-  //            style={{backgroundImage: 'url(https://image.flaticon.com/icons/svg/145/145867.svg)'}}
-  //       ></div>
-  //
-  //       <div className="msg-bubble">
-  //         <div className="msg-info">
-  //           <div className="msg-info-name">Someone</div>
-  //           <div className="msg-info-time">{formatDate(new Date())}</div>
-  //         </div>
-  //
-  //         <div className="msg-text typewriter">
-  //           {typing}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
   function BlobMessage({ message }) {
     return (
-      <div className="msg right-msg">
-        <div
-          className="msg-img"
-          style={{ backgroundImage : `url(https://image.flaticon.com/icons/svg/145/145867.svg)`}}
-        ></div>
-
-        <div className="msg-bubble">
-          <div className="msg-info">
-            <div className="msg-info-name">Someone</div>
-            <div className="msg-info-time">{formatDate(new Date())}</div>
-          </div>
-
-          <div className="msg-text">
-            {message}
-          </div>
+      <div className="bg-transparent max-h-min rounded-3xl flex flex-row p-6 gap-5">
+        <Image src={user.photoURL} alt={"oops image not found"} width={30} height={30} className="rounded-full" />
+        <div className="">
+          {message}
         </div>
       </div>
     );
@@ -205,87 +161,96 @@ export default function Home() {
   }
 
   return (
-    <div className="h-screen relative w-full overflow-hidden flex flex-col items-center justify-center">
-      <TopBar/>
-      <section className="msger h-full">
-        <header className="msger-header">
-          <div className="msger-header-title">
-            <i className="fas fa-comment-alt"></i> amFOSS Bot
-          </div>
-          <div className="msger-header-options">
-            <span><i className="fas fa-cog"></i></span>
-          </div>
-        </header>
+    // <div className="w-full h-screen flex flex-col">
+    //   <div className="flex flex-row flex-grow">
+    //     <div className="w-1/5 h-full">hello world</div>
+    //     <div className="w-4/5 h-full relative">
+    //       <TopBar/>
+    //       <section className="msger flex flex-col w-full h-full">
+    //         <main className="msger-chat flex flex-col overflow-auto" ref={msgerChat}>
 
-        <main className="msger-chat" ref={msgerChat}>
-          <div className="msg left-msg">
-            <div
-              className="msg-img"
-              style={{backgroundImage : "url(https://image.flaticon.com/icons/svg/327/327779.svg)"}}
-            ></div>
+    //
+    //           {/*<div className="msg right-msg">*/}
+    //           {/*  <div*/}
+    //           {/*    className="msg-img"*/}
+    //           {/*    style={{backgroundImage : "url(https://image.flaticon.com/icons/svg/145/145867.svg)"}}*/}
+    //           {/*  ></div>*/}
+    //
+    //           {/*  <div className="msg-bubble">*/}
+    //           {/*    <div className="msg-info">*/}
+    //           {/*      <div className="msg-info-name">Sajad</div>*/}
+    //           {/*      <div className="msg-info-time">12:46</div>*/}
+    //           {/*    </div>*/}
+    //
+    //           {/*    <div className="msg-text">*/}
+    //           {/*      You can change your name in JS section!*/}
+    //           {/*    </div>*/}
+    //           {/*  </div>*/}
+    //           {/*</div>*/}
 
-            <div className="msg-bubble">
-              <div className="msg-info">
-                <div className="msg-info-name">BOT</div>
-                <div className="msg-info-time">12:45</div>
+    //         </main>
+    //         {/*<div className="flex flex-row items-center justify-center gap-2 p-4">*/}
+    //         {/*  <div>Suggestions</div>*/}
+    //         {/*  <button*/}
+    //         {/*    className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"*/}
+    //         {/*    onClick={() => handleSuggestionSubmit("amrita")}>*/}
+    //         {/*    amrita*/}
+    //         {/*  </button>*/}
+    //         {/*  <button*/}
+    //         {/*    className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"*/}
+    //         {/*    onClick={() => handleSuggestionSubmit("amfoss")}>*/}
+    //         {/*    amfoss*/}
+    //         {/*  </button>*/}
+    //         {/*  <button*/}
+    //         {/*    className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"*/}
+    //         {/*    onClick={() => handleSuggestionSubmit("registration")}>*/}
+    //         {/*    registration*/}
+    //         {/*  </button>*/}
+    //         {/*</div>*/}
+    //         {/*<div className="flex flex-row w-full gap-10">*/}
+    //         {/*  <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => setFireMessage(user)}>get user</button>*/}
+    //         {/*  <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => updateFireMessage(message, user)}>update Messages</button>*/}
+    //         {/*  <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={getMessages}>get Messages</button>*/}
+    //         {/*</div>*/}
+    //
+
+    //       </section>
+    //     </div>
+    //   </div>
+    // </div>
+    <div className="bg-white dark:bg-black h-screen w-full p-5 overflow-y-hidden flex flex-col">
+      <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
+      {/* section containing the history sidebar and main chat section. */}
+      <div className="flex flex-row text-white flex-grow">
+        {/* left side */}
+        <div className={`bg-black text-white transition-all py-2 duration-300 ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
+          <div className="rounded-full px-3 py-1 bg-gray-500/30 max-w-min">History</div>
+        </div>
+        {/*right side */}
+        <div className={`bg-black w-full p-2 flex-grow ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
+          <div className="w-full h-full rounded-3xl bg-[#222327] flex flex-col">
+            <div className={`rounded-3xl flex-grow ${historySideBar ? 'pl-5' : 'pl-20'} ${historySideBar ? 'pr-8' : 'pr-20'} py-6 transition-all ease-in-out duration-300`}>
+              {/* to be iterated over and over again. */}
+              <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
+                <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={20} />
+                <div className="">
+                  Hi, welcome to amFOSS Bot. 😄
+                </div>
               </div>
-
-              <div className="msg-text">
-                Hi, welcome to amFOSS Bot. 😄
-              </div>
+              {messages.map((MessageComponent, index) =>
+                React.cloneElement(MessageComponent, { key: index })
+              )}
+            </div>
+            <div className="max-h-min sticky flex items-center justify-center bottom-0 pt-2 pb-6">
+              <form className="sticky bottom-0 w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
+                <input type="text" className="w-10/12 outline-none bg-[#131314] border border-white/70 px-10 py-4 rounded-full text-md text-white placeholder:text-white/90  focus:border-blue-300 hover:border-white" placeholder="Post your question here" value={message} onChange={handleMessageChange}/>
+                <button type="submit" className="">Send</button>
+              </form>
             </div>
           </div>
-
-          {/*<div className="msg right-msg">*/}
-          {/*  <div*/}
-          {/*    className="msg-img"*/}
-          {/*    style={{backgroundImage : "url(https://image.flaticon.com/icons/svg/145/145867.svg)"}}*/}
-          {/*  ></div>*/}
-
-          {/*  <div className="msg-bubble">*/}
-          {/*    <div className="msg-info">*/}
-          {/*      <div className="msg-info-name">Sajad</div>*/}
-          {/*      <div className="msg-info-time">12:46</div>*/}
-          {/*    </div>*/}
-
-          {/*    <div className="msg-text">*/}
-          {/*      You can change your name in JS section!*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {messages.map((MessageComponent, index) =>
-            React.cloneElement(MessageComponent, { key: index })
-          )}
-        </main>
-        <div className="flex flex-row items-center justify-center gap-2 p-4">
-          <div>Suggestions</div>
-          <button
-            className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"
-            onClick={() => handleSuggestionSubmit("amrita")}>
-            amrita
-          </button>
-          <button
-            className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"
-            onClick={() => handleSuggestionSubmit("amfoss")}>
-            amfoss
-          </button>
-          <button
-            className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"
-            onClick={() => handleSuggestionSubmit("registration")}>
-            registration
-          </button>
         </div>
-        <div className="flex flex-row w-full gap-10">
-          <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => setFireMessage(user)}>get user</button>
-          <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => updateFireMessage(message, user)}>update Messages</button>
-          <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={getMessages}>get Messages</button>
-        </div>
-
-        <form className="msger-inputarea" onSubmit={handleSubmit}>
-          <input type="text" className="msger-input" placeholder="Enter your message..." value={message} onChange={handleMessageChange}/>
-          <button type="submit" className="msger-send-btn">Send</button>
-        </form>
-      </section>
+      </div>
     </div>
+
   )
 }
