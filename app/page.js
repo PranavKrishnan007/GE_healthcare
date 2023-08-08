@@ -7,21 +7,19 @@ import { collection, doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase
 import { db } from '@/app/firebase'
 import { UserAuth } from '@/app/context/AuthContext'
 import Image from 'next/image'
+import Sidebar from '@/components/sidebar'
 
 export default function Home() {
 
-  const { user } = UserAuth()
+  const { user } = UserAuth();
   const [historySideBar, setHistorySideBar] = useState(true);
+  const [historymsg, setHistoryMsg] = useState({});
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const msgerChat = useRef(null);
 
   useEffect(() => {
-    if(msgerChat.current) {
-      const lastMessageElement = msgerChat.current.lastElementChild;
-      if (lastMessageElement) lastMessageElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
+    getMessages(user).then(msg => setHistoryMsg(msg))
+  }, [user]);
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
@@ -30,39 +28,46 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!message) return;
+    updateFireMessage(message, user).then(() => getMessages(user).then(msg => setHistoryMsg(msg)));
     addBlobMessage(message);
     setMessage('');
   }
 
-  const getMessages = async () => {
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    }
-    else {
-      console.log("No such document!");
+  const getMessages = async (user) => {
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      }
+      else {
+        console.log("No such document!");
+      }
+      const data = docSnap.data();
+      return data.messages; // Accessing messages from the data.
+    } catch {
+      console.log("oopsieee")
     }
   }
 
-  const setFireMessage = async (user) => {
-    // Get the Firestore document for the authenticated user's uid
-    const userDocRef = doc(collection(db, "users"), user.uid);
-    console.log(user.uid)
-    try {
-      const userDocSnapshot = await getDoc(userDocRef);
-
-      if (userDocSnapshot.exists()) {
-        console.log("exists");
-        // Do something if the document exists
-      } else {
-        console.log("not exists");
-        // Do something if the document does not exist
-      }
-    } catch (error) {
-      console.error("Error checking document:", error);
-    }
-  };
+  // const setFireMessage = async (user) => {
+  //   // Get the Firestore document for the authenticated user's uid
+  //   const userDocRef = doc(collection(db, "users"), user.uid);
+  //   console.log(user.uid)
+  //   try {
+  //     const userDocSnapshot = await getDoc(userDocRef);
+  //
+  //     if (userDocSnapshot.exists()) {
+  //       console.log("exists");
+  //       // Do something if the document exists
+  //     } else {
+  //       console.log("not exists");
+  //       // Do something if the document does not exist
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking document:", error);
+  //   }
+  // };
 
   const updateFireMessage = async (message, user) => {
     const userDocRef = doc(db, "users", user.uid); // Updated line here
@@ -95,7 +100,6 @@ export default function Home() {
 
   const handleSuggestionSubmit = async (suggestion) => {
     await setMessage(suggestion);
-    handleSubmit({ preventDefault: () => {} });
   }
 
 
@@ -141,6 +145,7 @@ export default function Home() {
     return message;
   }
 
+  console.log(messages);
   function BlobMessage({ message }) {
     return (
       <div className="bg-transparent max-h-min rounded-3xl flex flex-row p-6 gap-5">
@@ -161,70 +166,13 @@ export default function Home() {
   }
 
   return (
-    // <div className="w-full h-screen flex flex-col">
-    //   <div className="flex flex-row flex-grow">
-    //     <div className="w-1/5 h-full">hello world</div>
-    //     <div className="w-4/5 h-full relative">
-    //       <TopBar/>
-    //       <section className="msger flex flex-col w-full h-full">
-    //         <main className="msger-chat flex flex-col overflow-auto" ref={msgerChat}>
-
-    //
-    //           {/*<div className="msg right-msg">*/}
-    //           {/*  <div*/}
-    //           {/*    className="msg-img"*/}
-    //           {/*    style={{backgroundImage : "url(https://image.flaticon.com/icons/svg/145/145867.svg)"}}*/}
-    //           {/*  ></div>*/}
-    //
-    //           {/*  <div className="msg-bubble">*/}
-    //           {/*    <div className="msg-info">*/}
-    //           {/*      <div className="msg-info-name">Sajad</div>*/}
-    //           {/*      <div className="msg-info-time">12:46</div>*/}
-    //           {/*    </div>*/}
-    //
-    //           {/*    <div className="msg-text">*/}
-    //           {/*      You can change your name in JS section!*/}
-    //           {/*    </div>*/}
-    //           {/*  </div>*/}
-    //           {/*</div>*/}
-
-    //         </main>
-    //         {/*<div className="flex flex-row items-center justify-center gap-2 p-4">*/}
-    //         {/*  <div>Suggestions</div>*/}
-    //         {/*  <button*/}
-    //         {/*    className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"*/}
-    //         {/*    onClick={() => handleSuggestionSubmit("amrita")}>*/}
-    //         {/*    amrita*/}
-    //         {/*  </button>*/}
-    //         {/*  <button*/}
-    //         {/*    className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"*/}
-    //         {/*    onClick={() => handleSuggestionSubmit("amfoss")}>*/}
-    //         {/*    amfoss*/}
-    //         {/*  </button>*/}
-    //         {/*  <button*/}
-    //         {/*    className="p-2 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out"*/}
-    //         {/*    onClick={() => handleSuggestionSubmit("registration")}>*/}
-    //         {/*    registration*/}
-    //         {/*  </button>*/}
-    //         {/*</div>*/}
-    //         {/*<div className="flex flex-row w-full gap-10">*/}
-    //         {/*  <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => setFireMessage(user)}>get user</button>*/}
-    //         {/*  <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={() => updateFireMessage(message, user)}>update Messages</button>*/}
-    //         {/*  <button className="w-1/3 p-4 bg-red-300 rounded-2xl hover:bg-red-400 transition duration-300 ease-in-out" onClick={getMessages}>get Messages</button>*/}
-    //         {/*</div>*/}
-    //
-
-    //       </section>
-    //     </div>
-    //   </div>
-    // </div>
     <div className="bg-white dark:bg-black h-screen w-full p-5 overflow-y-hidden flex flex-col">
       <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
       {/* section containing the history sidebar and main chat section. */}
       <div className="flex flex-row text-white flex-grow">
         {/* left side */}
         <div className={`bg-black text-white transition-all py-2 duration-300 ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
-          <div className="rounded-full px-3 py-1 bg-gray-500/30 max-w-min">History</div>
+          {user ? historymsg ? <Sidebar messages={historymsg} selection={handleSuggestionSubmit}/> : "no messages found" : "Login to view history."}
         </div>
         {/*right side */}
         <div className={`bg-black w-full p-2 flex-grow ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
