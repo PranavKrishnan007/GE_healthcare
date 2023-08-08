@@ -13,9 +13,17 @@ export default function Home() {
 
   const { user } = UserAuth();
   const [historySideBar, setHistorySideBar] = useState(true);
-  const [historymsg, setHistoryMsg] = useState({});
+  const [historyMsg, setHistoryMsg] = useState({});
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const chat = useRef(null);
+
+  useEffect(() => {
+    if(chat.current) {
+      const lastMessageElement = chat.current.lastElementChild;
+      if (lastMessageElement) lastMessageElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   useEffect(() => {
     getMessages(user).then(msg => setHistoryMsg(msg))
@@ -49,25 +57,6 @@ export default function Home() {
       console.log("oopsieee")
     }
   }
-
-  // const setFireMessage = async (user) => {
-  //   // Get the Firestore document for the authenticated user's uid
-  //   const userDocRef = doc(collection(db, "users"), user.uid);
-  //   console.log(user.uid)
-  //   try {
-  //     const userDocSnapshot = await getDoc(userDocRef);
-  //
-  //     if (userDocSnapshot.exists()) {
-  //       console.log("exists");
-  //       // Do something if the document exists
-  //     } else {
-  //       console.log("not exists");
-  //       // Do something if the document does not exist
-  //     }
-  //   } catch (error) {
-  //     console.error("Error checking document:", error);
-  //   }
-  // };
 
   const updateFireMessage = async (message, user) => {
     const userDocRef = doc(db, "users", user.uid); // Updated line here
@@ -166,31 +155,22 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-white dark:bg-black h-screen w-full p-5 overflow-y-hidden flex flex-col">
+    <div className="bg-white dark:bg-black h-screen w-full p-5 overflow-hidden flex no-scrollbar flex-col">
       <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
-      {/* section containing the history sidebar and main chat section. */}
-      <div className="flex flex-row text-white flex-grow">
-        {/* left side */}
-        <div className={`bg-black text-white transition-all py-2 duration-300 ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
-          {user ? historymsg ? <Sidebar messages={historymsg} selection={handleSuggestionSubmit}/> : "no messages found" : "Login to view history."}
+      <div className="flex flex-row flex-grow h-full no-scrollbar text-white">
+        <div className={`bg-black text-white transition-all py-2 duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
+          {user ? historyMsg ? <Sidebar messages={historyMsg} selection={handleSuggestionSubmit}/> : "no messages found" : "Login to view history."}
         </div>
-        {/*right side */}
-        <div className={`bg-black w-full p-2 flex-grow ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
-          <div className="w-full h-full rounded-3xl bg-[#222327] flex flex-col">
-            <div className={`rounded-3xl flex-grow ${historySideBar ? 'pl-5' : 'pl-20'} ${historySideBar ? 'pr-8' : 'pr-20'} py-6 transition-all ease-in-out duration-300`}>
-              {/* to be iterated over and over again. */}
-              <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
-                <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={20} />
-                <div className="">
-                  Hi, welcome to amFOSS Bot. 😄
-                </div>
-              </div>
+        <div className={`bg-black w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
+          <div className="w-full rounded-3xl no-scrollbar bg-[#222327] flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
+            <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5' : 'pl-20'} ${historySideBar ? 'pr-8' : 'pr-20'} py-6 transition-all ease-in-out duration-300`}>
+              {/* CHAT SECTION */}
               {messages.map((MessageComponent, index) =>
                 React.cloneElement(MessageComponent, { key: index })
               )}
             </div>
-            <div className="max-h-min sticky flex items-center justify-center bottom-0 pt-2 pb-6">
-              <form className="sticky bottom-0 w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
+            <div className="flex items-center justify-center pb-6">
+              <form className="w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
                 <input type="text" className="w-10/12 outline-none bg-[#131314] border border-white/70 px-10 py-4 rounded-full text-md text-white placeholder:text-white/90  focus:border-blue-300 hover:border-white" placeholder="Post your question here" value={message} onChange={handleMessageChange}/>
                 <button type="submit" className="">Send</button>
               </form>

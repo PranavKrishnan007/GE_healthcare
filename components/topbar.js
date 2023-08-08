@@ -32,7 +32,7 @@ const TopBar = ({sideBar, setSidebar}) => {
 
   return (
     <div className="w-full flex gap-10 justify-between items-center pb-2 bg-white dark:bg-black text-white">
-      <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-blue-500 dark:text-red-500">
+      <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-black dark:text-white">
         <button className="h-6 w-6 bg-red-600" onClick={() => setSidebar(!sideBar)}></button>
         <div>AmFOSS Bot.</div>
       </div>
