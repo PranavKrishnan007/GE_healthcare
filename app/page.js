@@ -8,12 +8,14 @@ import { db } from '@/app/firebase'
 import { UserAuth } from '@/app/context/AuthContext'
 import Image from 'next/image'
 import Sidebar from '@/components/sidebar'
+import { BiMessageSquareError } from 'react-icons/bi'
+import { AiOutlineUser } from 'react-icons/ai'
 
 export default function Home() {
 
   const { user } = UserAuth();
   const [historySideBar, setHistorySideBar] = useState(true);
-  const [historyMsg, setHistoryMsg] = useState({});
+  const [historyMsg, setHistoryMsg] = useState([]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
@@ -36,7 +38,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(!message) return;
-    updateFireMessage(message, user).then(() => getMessages(user).then(msg => setHistoryMsg(msg)));
+    {user && updateFireMessage(message, user).then(() => getMessages(user).then(msg => setHistoryMsg(msg)));}
     addBlobMessage(message);
     setMessage('');
   }
@@ -134,11 +136,10 @@ export default function Home() {
     return message;
   }
 
-  console.log(messages);
   function BlobMessage({ message }) {
     return (
       <div className="bg-transparent max-h-min rounded-3xl flex flex-row p-6 gap-5">
-        <Image src={user.photoURL} alt={"oops image not found"} width={30} height={30} className="rounded-full" />
+        {user ? <Image src={user.photoURL} alt={"oops image not found"} width={30} height={30} className="rounded-full" /> : <span className="font-extrabold border-2 p-2 rounded-full"><AiOutlineUser className="" /></span>}
         <div className="">
           {message}
         </div>
@@ -159,7 +160,7 @@ export default function Home() {
       <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
       <div className="flex flex-row flex-grow h-full no-scrollbar text-white">
         <div className={`bg-black text-white transition-all py-2 duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
-          {user ? historyMsg ? <Sidebar messages={historyMsg} selection={handleSuggestionSubmit}/> : "no messages found" : "Login to view history."}
+          <Sidebar messages={historyMsg ? historyMsg : false} selection={handleSuggestionSubmit} state={historySideBar} setMessages={setMessages}/>
         </div>
         <div className={`bg-black w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
           <div className="w-full rounded-3xl no-scrollbar bg-[#222327] flex flex-col h-[calc(100vh-5rem)] overflow-hidden">

@@ -1,17 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { UserAuth } from '@/app/context/AuthContext'
+import Image from 'next/image'
+import { GoLightBulb } from 'react-icons/go'
+import { HiMiniBars4 } from 'react-icons/hi2'
+import { AiOutlineUser } from 'react-icons/ai'
 
 const TopBar = ({sideBar, setSidebar}) => {
-  const [dropDown, setDropDown] = useState(false);
-  const { user, googleSignIn, logOut } = UserAuth();
-
-  const handleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const { user } = UserAuth();
 
   const handleThemeChange = () => {
     if (document.documentElement.classList.contains('dark')) {
@@ -21,37 +16,29 @@ const TopBar = ({sideBar, setSidebar}) => {
     }
   }
 
-  const handleLogout = async () => {
-    try{
-      logOut();
-    } catch (error) {
-      console.log(error);
-    }
-    setDropDown(false)
-  }
-
   return (
-    <div className="w-full flex gap-10 justify-between items-center pb-2 bg-white dark:bg-black text-white">
+    <div className="w-full flex gap-10 justify-between items-center bg-white p-1 pr-14 dark:bg-black text-white">
       <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-black dark:text-white">
-        <button className="h-6 w-6 bg-red-600" onClick={() => setSidebar(!sideBar)}></button>
+        <button className="transition-all hover:scale-110 p-2 rounded-full duration-100" onClick={() => setSidebar(!sideBar)}><HiMiniBars4 /></button>
         <div>AmFOSS Bot.</div>
       </div>
       <div className="flex flex-row items-center justify-center gap-10">
-        {user ? (
-          <div className="relative group">
-            <button className="font-semibold" onClick={() => setDropDown(!dropDown)}>Welcome, {user ? user.displayName.split(' ')[0] : "Guest"}</button>
-            {dropDown && (
-              <div className="absolute left-0 w-28 mt-2 p-2 bg-white rounded-lg shadow-md group-hover:scale-100">
-                <button onClick={handleLogout} className="block w-full text-left">Logout</button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <button onClick={handleSignIn} className="font-semibold">Login</button>
-        )}
-        <button className="relative inline-block text-lg group" onClick={() => handleThemeChange()}>
-          theme change
+        <button className="relative bg-gray-400/20 hover:bg-gray-400 transition-all hover:scale-110 p-2 rounded-full duration-100 inline-block text-lg group dark:text-white text-black" onClick={() => handleThemeChange()}>
+          <GoLightBulb />
         </button>
+        {user ? (
+            <div className="font-semibold flex flex-row gap-3 items-center justify-center" >
+              <span className="tracking-wider text-black text-lg dark:text-white">
+                Welcome, {' '}
+                <span className="text-amber-500 dark:text-amber-800 font-bold">
+                  {user ? user?.displayName.split(' ')[0] : "Guest"}
+                </span>
+              </span>
+              <Image src={user?.photoURL} className="rounded-full" alt="userImage" width={30} height={30}/>
+            </div>
+        ) : (
+          <div className="flex flex-row items-center text-black dark:text-white justify-center gap-3 text-lg">Welcome, Guest <span className="font-extrabold border-2 p-2 rounded-full"><AiOutlineUser className="" /></span></div>
+        )}
       </div>
 
     </div>
