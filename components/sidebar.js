@@ -3,8 +3,9 @@ import { UserAuth } from '@/app/context/AuthContext'
 import { IoLogInOutline, IoLogOutOutline } from 'react-icons/io5'
 import { BiMessageSquareError } from 'react-icons/bi'
 import { BsChatLeftText } from 'react-icons/bs'
+import { PiBellSimpleRinging } from 'react-icons/pi'
 
-const Sidebar = ({messages, selection, state, setMessages}) => {
+const Sidebar = ({messages, selection, state, setMessages, isOpen, setIsOpen}) => {
 
   const { user, googleSignIn, logOut } = UserAuth()
   const sidebarView = useRef(null);
@@ -62,12 +63,19 @@ const Sidebar = ({messages, selection, state, setMessages}) => {
         )}
       </div>
 
-      <div className="">
-        {user ? (
-          <button className="flex flex-row items-center justify-center gap-2" onClick={handleLogout}>Logout <IoLogOutOutline /></button>
-        ) : (
-          <button className="flex flex-row items-center justify-center gap-2" onClick={handleSignIn}>Login <IoLogInOutline /></button>
+      <div className="flex flex-col gap-2">
+        {user && (
+          <div>
+            <button className="flex flex-row items-center justify-center gap-2" onClick={() => setIsOpen(!isOpen)}>Want Praveshan Notification ? <PiBellSimpleRinging /></button>
+          </div>
         )}
+        <div>
+          {user ? (
+            <button className="flex flex-row items-center justify-center gap-2" onClick={handleLogout}>Logout <IoLogOutOutline /></button>
+          ) : (
+            <button className="flex flex-row items-center justify-center gap-2" onClick={handleSignIn}>Login <IoLogInOutline /></button>
+          )}
+        </div>
       </div>
     </div>
   )
