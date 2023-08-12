@@ -272,7 +272,7 @@ export default function Home() {
               <div className="carousel-container custom-scrollbar">
                 <div className="carousel custom-scrollbar" ref={carouselRef}>
                   {suggestionList.suggestions?.map((suggestion, index) => (
-                    <button key={index} className="carousel-item" onClick={() => addBlobSuggestion(suggestion)}>
+                    <button key={index} className="carousel-item whitespace-nowrap w-full" onClick={() => addBlobSuggestion(suggestion)}>
                       {suggestion.suggestion}
                     </button>
                   ))}

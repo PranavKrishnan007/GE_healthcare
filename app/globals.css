@@ -82,7 +82,7 @@ html {
 }
 
 .carousel::-webkit-scrollbar {
-    width: 8px;
+    width: 2px;
 }
 
 .carousel::-webkit-scrollbar-track {
@@ -94,7 +94,6 @@ html {
 }
 
 .carousel-item {
-    min-width: 200px;
     padding: 0.5rem;
     background-color: #131314;
     color: white;
