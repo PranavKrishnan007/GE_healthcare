@@ -16,6 +16,7 @@ export default function Home() {
 
   const { user } = UserAuth();
   const [historySideBar, setHistorySideBar] = useState(true);
+  const carouselRef = useRef();
   const [suggestionList, setSuggestionList] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [congrats, setCongrats] = useState(false);
@@ -23,6 +24,7 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
+  console.log(suggestionList);
 
   useEffect(() => {
     if(chat.current) {
@@ -108,6 +110,14 @@ export default function Home() {
     await setMessage(suggestion);
   }
 
+  const addBlobSuggestion = (suggestion) => {
+    setMessages(oldMessages => [
+      ...oldMessages,
+      <BlobMessage message={suggestion.suggestion} />,
+      <BotSuggestionMessage message={suggestion.answer} />
+    ]);
+  }
+
   const addBlobMessage = (blobText) => {
     setMessages(oldMessages => [
       ...oldMessages,
@@ -115,6 +125,21 @@ export default function Home() {
       <BotMessage message={blobText} />
     ]);
   };
+
+  function BotSuggestionMessage ({ message }) {
+    const typing = message.split('').map((char, index) => (
+      <span key={index} style={{animationDelay: index * 0.01 + 's'}}>{char}</span>
+    ));
+
+    return (
+      <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
+        <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
+        <div className="typewriter">
+          {typing}
+        </div>
+      </div>
+    );
+  }
 
   function BotMessage ({ message }) {
     const botResponse = BotResponse(message);
@@ -243,7 +268,16 @@ export default function Home() {
                 React.cloneElement(MessageComponent, { key: index })
               )}
             </div>
-            <div className="flex items-center justify-center pb-6">
+            <div className="flex items-center justify-center pb-6 flex-col">
+              <div className="carousel-container custom-scrollbar">
+                <div className="carousel custom-scrollbar" ref={carouselRef}>
+                  {suggestionList.suggestions?.map((suggestion, index) => (
+                    <button key={index} className="carousel-item" onClick={() => addBlobSuggestion(suggestion)}>
+                      {suggestion.suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <form className="w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
                 <input type="text" className="w-10/12 outline-none bg-[#131314] border border-white/70 px-10 py-4 rounded-full text-md text-white placeholder:text-white/90  focus:border-blue-300 hover:border-white" placeholder="Post your question here" value={message} onChange={handleMessageChange}/>
                 <button type="submit" className="">Send</button>

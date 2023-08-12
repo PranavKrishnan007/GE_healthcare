@@ -64,3 +64,46 @@ html {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+
+.carousel-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #888888 #f5f5f5;
+}
+
+.carousel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.carousel::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+    background-color: #888888;
+}
+
+.carousel-item {
+    min-width: 200px;
+    padding: 0.5rem;
+    background-color: #131314;
+    color: white;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.carousel-item:hover {
+    background-color: #ffffff10;
+}
