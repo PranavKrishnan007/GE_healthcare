@@ -8,14 +8,15 @@ import { db } from '@/app/firebase'
 import { UserAuth } from '@/app/context/AuthContext'
 import Image from 'next/image'
 import Sidebar from '@/components/sidebar'
-import { BiMessageSquareError } from 'react-icons/bi'
 import { AiOutlineUser } from 'react-icons/ai'
 import { IoCloseCircleOutline } from 'react-icons/io5'
+import { getSuggestions } from '@/app/admin/page'
 
 export default function Home() {
 
   const { user } = UserAuth();
   const [historySideBar, setHistorySideBar] = useState(true);
+  const [suggestionList, setSuggestionList] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [congrats, setCongrats] = useState(false);
   const [historyMsg, setHistoryMsg] = useState([]);
@@ -32,6 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     getMessages(user).then(msg => setHistoryMsg(msg))
+    getSuggestions().then((suggestions) => setSuggestionList(suggestions));
     checkEnrollment(user).then(val => setCongrats(val))
   }, [user]);
 
@@ -81,7 +83,6 @@ export default function Home() {
     const userDocRef = doc(db, "users", user.uid); // Updated line here
     try {
       const userDocSnapshot = await getDoc(userDocRef);
-
       if (userDocSnapshot.exists()) {
         try {
           await updateDoc(userDocRef, {
@@ -103,11 +104,9 @@ export default function Home() {
     }
   };
 
-
   const handleSuggestionSubmit = async (suggestion) => {
     await setMessage(suggestion);
   }
-
 
   const addBlobMessage = (blobText) => {
     setMessages(oldMessages => [
@@ -119,7 +118,6 @@ export default function Home() {
 
   function BotMessage ({ message }) {
     const botResponse = BotResponse(message);
-
     const typing = botResponse.split('').map((char, index) => (
       <span key={index} style={{animationDelay: index * 0.03 + 's'}}>{char}</span>
     ));
