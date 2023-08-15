@@ -34,6 +34,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+app/api/amfoss-chatbot-4f9673445431.json
 
 .idea/
 .env

@@ -43,6 +43,25 @@ export default function Home() {
     setMessage(e.target.value);
   };
 
+  async function sendChatQuery() {
+    try {
+      const response = await fetch('http://localhost:4000/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: 'I love you' }), // Pass the request body here
+      });
+
+      const data = await response.json();
+      console.log('Response from chat API:', data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  sendChatQuery();
+
   const checkEnrollment = async (user) => {
     console.log("enrollment is being called.")
     console.log(user);
@@ -68,12 +87,6 @@ export default function Home() {
     try {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-      }
-      else {
-        console.log("No such document!");
-      }
       const data = docSnap.data();
       return data.messages; // Accessing messages from the data.
     } catch {
@@ -90,7 +103,6 @@ export default function Home() {
           await updateDoc(userDocRef, {
             messages: arrayUnion(message),
           });
-          console.log("Document successfully updated!");
         } catch (error) {
           console.error("Error updating document:", error);
         }
