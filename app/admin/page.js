@@ -9,12 +9,6 @@ export const getSuggestions = async () => {
   try {
     const docRef = doc(db, "data", "suggestions");
     const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      console.log("Document exists");
-    }
-    else {
-      console.log("document doesn't exist");
-    }
     return docSnap.data();
   } catch {
     console.log("error");
@@ -47,7 +41,6 @@ const Admin = () => {
 
 
   const handleAddSuggestionClick = async (suggestion, answer) => {
-    console.log([suggestion, answer]);
     const docRef = doc(db, "data", "suggestions");
     try {
       const docSnap = await getDoc(docRef);
