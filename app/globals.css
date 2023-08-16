@@ -74,7 +74,6 @@ html {
 .carousel {
     display: flex;
     gap: 1rem;
-    padding: 0.5rem;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: thin;
@@ -165,4 +164,31 @@ html {
 
 .bouncing-loader > div:nth-child(3) {
     animation-delay: 0.4s;
+}
+
+/* In your CSS file or inline styles */
+.glow-button {
+    position: relative;
+    background-color: rgba(128, 128, 128, 0.1); /* Initial slight gray background */
+    transition: transform 0.2s, filter 0.2s;
+    overflow: hidden;
+    z-index: 1; /* Adjust the z-index if needed */
+}
+
+.glow-button::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 4px; /* Adjust the height for the glow size */
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+    bottom: -2px; /* Adjust the value to position the glow below the button */
+    left: 0;
+    transform: scaleX(0); /* Initial scale for the glow effect */
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
+}
+
+.glow-button:hover::before {
+    transform: scaleX(1); /* Scale to reveal the glow on hover */
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), #ffffff, rgba(0, 0, 0, 0)); /* Change to the glow gradient */
 }

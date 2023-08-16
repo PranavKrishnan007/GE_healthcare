@@ -39,9 +39,9 @@ const Sidebar = ({messages, selection, state, setMessages, isOpen, setIsOpen}) =
   return (
     <div className="pl-5 h-full flex justify-between flex-col">
       <div className="my-5">
-        <div className="whitespace-nowrap">Recent Conversations</div>
+        <div className="whitespace-nowrap font-extrabold">Recent Conversations</div>
         {messages ? (
-          <div ref={sidebarView} className="flex my-3 w-full flex-col h-[60vh] no-scrollbar gap-3 sidebarView overflow-y-scroll">
+          <div ref={sidebarView} className="flex my-3 w-full flex-col h-[60vh] no-scrollbar sidebarView overflow-y-scroll">
             {messages?.map((entry) => (
               <button key={entry} className="w-full flex items-center rounded-3xl px-3 text-left hover:bg-gradient-to-r hover:from-gray-600 hover:to-black gap-3 py-3 transition-colors duration-500" onClick={() => selection(entry)}>
                 <div className="flex-shrink-0 p-2 bg-gray-400/20 rounded-full">
@@ -63,7 +63,7 @@ const Sidebar = ({messages, selection, state, setMessages, isOpen, setIsOpen}) =
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 pb-8">
         {user && (
           <div>
             <button className="flex flex-row items-center justify-center gap-2" onClick={() => setIsOpen(!isOpen)}>Want Praveshan Notification ? <PiBellSimpleRinging /></button>

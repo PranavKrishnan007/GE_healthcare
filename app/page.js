@@ -202,7 +202,7 @@ export default function Home() {
         return res.response;
       }
     } catch (error) {
-      return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions."
+      return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions options given below."
     }
   }
 
@@ -288,7 +288,7 @@ export default function Home() {
             </div>
           )}
           <div className="w-full rounded-3xl no-scrollbar bg-[#222327] flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
-            <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5' : 'pl-20'} ${historySideBar ? 'pr-8' : 'pr-20'} py-6 transition-all ease-in-out duration-300`}>
+            <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5 pr-8' : 'px-20'} py-6 transition-all ease-in-out duration-300`}>
               <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
                 <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
                 <div className="typewriter">
@@ -301,18 +301,30 @@ export default function Home() {
               )}
             </div>
             <div className="flex items-center justify-center pb-6 flex-col">
-              <div className="carousel-container custom-scrollbar">
+              <div className={`carousel-container custom-scrollbar ${historySideBar ? 'pl-5 pr-8' : 'px-20'} transition-all pb-3 ease-in-out duration-300`}>
                 <div className="carousel custom-scrollbar" ref={carouselRef}>
                   {suggestionList.suggestions?.map((suggestion, index) => (
-                    <button key={index} className="carousel-item whitespace-nowrap max-w-min px-4 py-2" onClick={() => addBlobSuggestion(suggestion)}>
+                    <button
+                      key={index}
+                      className="carousel-item whitespace-nowrap max-w-min px-4 py-2 glow-button" // Added "glow-button" class
+                      onClick={() => addBlobSuggestion(suggestion)}
+                    >
                       {suggestion.suggestion}
                     </button>
                   ))}
                 </div>
               </div>
               <form className="w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
-                <input type="text" className="w-10/12 outline-none bg-[#131314] border border-white/70 px-10 py-4 rounded-full text-md text-white placeholder:text-white/90  focus:border-blue-300 hover:border-white" placeholder="Post your question here" value={message} onChange={handleMessageChange}/>
-                <button type="submit" className="">Send</button>
+                <input
+                  type="text"
+                  className="w-10/12 outline-none bg-[#131314] border border-white/70 px-10 py-4 rounded-full text-md text-white placeholder:text-white/90 focus:border-blue-300 hover:border-white"
+                  placeholder="Post your question here"
+                  value={message}
+                  onChange={handleMessageChange}
+                />
+                <button type="submit" className="">
+                  Send
+                </button>
               </form>
             </div>
           </div>
