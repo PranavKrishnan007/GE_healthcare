@@ -37,13 +37,13 @@ const Sidebar = ({messages, selection, state, setMessages, isOpen, setIsOpen}) =
 
 
   return (
-    <div className="pl-5 h-full flex justify-between flex-col">
+    <div className="pl-5 h-full text-black dark:text-white flex justify-between flex-col transition-all ease-in-out">
       <div className="my-5">
         <div className="whitespace-nowrap font-extrabold">Recent Conversations</div>
         {messages ? (
           <div ref={sidebarView} className="flex my-3 w-full flex-col h-[60vh] no-scrollbar sidebarView overflow-y-scroll">
             {messages?.map((entry) => (
-              <button key={entry} className="w-full flex items-center rounded-3xl px-3 text-left hover:bg-gradient-to-r hover:from-gray-600 hover:to-black gap-3 py-3 transition-colors duration-500" onClick={() => selection(entry)}>
+              <button key={entry} className="w-full flex items-center rounded-3xl px-3 text-left hover:bg-gradient-to-r hover:from-gray-300 hover:to-white dark:hover:bg-gradient-to-r dark:hover:from-gray-600 dark:hover:to-black gap-3 py-3 transition-colors duration-500" onClick={() => selection(entry)}>
                 <div className="flex-shrink-0 p-2 bg-gray-400/20 rounded-full">
                   <BsChatLeftText />
                 </div>

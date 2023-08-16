@@ -141,7 +141,7 @@ export default function Home() {
     ));
 
     return (
-      <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
+      <div className="dark:bg-[#131314] bg-gray-300 max-h-min rounded-3xl flex flex-row p-6 gap-5">
         <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
         <div className="typewriter">
           {typing}
@@ -171,7 +171,7 @@ export default function Home() {
     ));
 
     return (
-      <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
+      <div className="dark:bg-[#131314] bg-gray-300 max-h-min rounded-3xl flex flex-row p-6 gap-5">
         <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
         <div className="typewriter">
           {isLoading ?
@@ -252,16 +252,16 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-white dark:bg-black h-screen w-full p-5 overflow-hidden flex no-scrollbar flex-col">
+    <div className="bg-white dark:bg-black transition-all ease-in-out h-screen w-full p-5 overflow-hidden flex no-scrollbar flex-col">
       <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar}/>
       <div className="flex flex-row flex-grow h-full no-scrollbar text-white">
-        <div className={`bg-black text-white transition-all py-2 duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
+        <div className={`bg-white dark:bg-black text-white transition-all py-2 duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
           <Sidebar messages={historyMsg ? historyMsg : false} selection={handleSuggestionSubmit} state={historySideBar} setMessages={setMessages} isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
-        <div className={`bg-black w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
+        <div className={`bg-white ease-in-out dark:bg-black w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
           {isOpen && (
             <div className="w-screen h-screen z-50 fixed top-0 right-0 backdrop-blur-2xl flex items-center justify-center">
-              <div className="p-10 bg-black shadow-2xl rounded-3xl flex flex-col relative items-center justify-center gap-4">
+              <div className="p-10 transition-all ease-in-out bg-white dark:bg-black shadow-2xl rounded-3xl flex flex-col relative items-center justify-center gap-4">
                 <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={50} height={50} />
                 <button className="absolute top-3 right-3" onClick={() => setIsOpen(!isOpen)}><IoCloseCircleOutline size={20}/></button>
                 <div className="text-center">
@@ -287,9 +287,9 @@ export default function Home() {
               </div>
             </div>
           )}
-          <div className="w-full rounded-3xl no-scrollbar bg-[#222327] flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
+          <div className="w-full rounded-3xl no-scrollbar bg-gray-200 text-black dark:text-white dark:bg-[#222327] flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
             <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5 pr-8' : 'px-20'} py-6 transition-all ease-in-out duration-300`}>
-              <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
+              <div className="dark:bg-[#131314] bg-gray-300 max-h-min rounded-3xl flex flex-row p-6 gap-5">
                 <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
                 <div className="typewriter">
                   Hello! welcome to AmFOSS BOT.
@@ -306,7 +306,7 @@ export default function Home() {
                   {suggestionList.suggestions?.map((suggestion, index) => (
                     <button
                       key={index}
-                      className="carousel-item whitespace-nowrap max-w-min px-4 py-2 glow-button" // Added "glow-button" class
+                      className="carousel-item whitespace-nowrap w-full text-black dark:text-white px-4 py-2 glow-button" // Added "glow-button" class
                       onClick={() => addBlobSuggestion(suggestion)}
                     >
                       {suggestion.suggestion}
@@ -317,7 +317,7 @@ export default function Home() {
               <form className="w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
                 <input
                   type="text"
-                  className="w-10/12 outline-none bg-[#131314] border border-white/70 px-10 py-4 rounded-full text-md text-white placeholder:text-white/90 focus:border-blue-300 hover:border-white"
+                  className="w-10/12 outline-none bg-gray-300 dark:bg-[#131314] border border-gray-400 dark:border-white/70 px-10 py-4 rounded-full text-md text-white dark:placeholder:text-white/90 focus:border-blue-300 hover:border-white"
                   placeholder="Post your question here"
                   value={message}
                   onChange={handleMessageChange}

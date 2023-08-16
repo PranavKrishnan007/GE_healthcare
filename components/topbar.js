@@ -17,7 +17,7 @@ const TopBar = ({sideBar, setSidebar, admin}) => {
   }
 
   return (
-    <div className="w-full flex gap-10 justify-between items-center bg-white p-1 pr-14 dark:bg-black text-white">
+    <div className="w-full flex gap-10 justify-between items-center ease-in-out transition-all bg-white p-1 pr-14 dark:bg-black text-white">
       <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-black dark:text-white">
         {admin ? null : <button className="transition-all hover:scale-110 p-2 rounded-full duration-100" onClick={() => setSidebar(!sideBar)}><HiMiniBars4 /></button>}
         <div className={`${admin ? 'pl-10' : ''}`}>AmFOSS Bot.</div>

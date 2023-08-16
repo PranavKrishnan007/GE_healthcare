@@ -82,7 +82,7 @@ const Admin = () => {
       <div className="dark:bg-black dark:text-white flex flex-col min-h-screen py-2 px-4">
         <h1 className="text-xl text-center dark:text-gray-100">Admin Page</h1>
         {user?.email === "pranavk0217@gmail.com" ? (
-          <div className="p-5 bg-white dark:bg-black rounded shadow-sm w-full">
+          <div className="p-5 bg-white dark:bg-black transition-all ease-in-out rounded shadow-sm w-full">
             {suggestionList.suggestions?.map((suggestion, index) => (
               <div key={index} className="flex flex-row w-full justify-between mb-2">
                 <div className="flex flex-row space-x-4">
