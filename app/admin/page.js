@@ -4,6 +4,7 @@ import { UserAuth } from '@/app/context/AuthContext'
 import { useEffect, useState } from 'react'
 import { db } from '@/app/firebase'
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import TopBar from '@/components/topbar'
 
 export const getSuggestions = async () => {
   try {
@@ -76,33 +77,35 @@ const Admin = () => {
   }
 
   return (
-    <div className="flex flex-col">
-      <h1>Admin Page</h1>
-      {user?.email === "pranavk0217@gmail.com" ? (
-        <div className="flex flex-col w-full">
-          {suggestionList.suggestions?.map((suggestion, index) => (
-            <div key={index} className="flex flex-row w-full justify-between">
-              <div className="flex flex-row">
-                <div className="">{suggestion.suggestion}</div>
-                <div className="">{suggestion.answer}</div>
+    <div>
+      <TopBar admin={true}/>
+      <div className="dark:bg-black dark:text-white flex flex-col min-h-screen py-2 px-4">
+        <h1 className="text-xl text-center dark:text-gray-100">Admin Page</h1>
+        {user?.email === "pranavk0217@gmail.com" ? (
+          <div className="p-5 bg-white dark:bg-black rounded shadow-sm w-full">
+            {suggestionList.suggestions?.map((suggestion, index) => (
+              <div key={index} className="flex flex-row w-full justify-between mb-2">
+                <div className="flex flex-row space-x-4">
+                  <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded">{suggestion.suggestion}</div>
+                  <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded">{suggestion.answer}</div>
+                </div>
+                <div>
+                  <button className="dark:bg-red-500 bg-red-300 text-white rounded p-1" onClick={() => handleSuggestionRemoval(index)}>Remove</button>
+                </div>
               </div>
-              <div>
-                <button className="bg-blue-300" onClick={() => handleSuggestionRemoval(index)}>Remove</button>
-              </div>
+            ))}
+            <div className="flex flex-col w-full">
+              <input type="text" placeholder="Question" className="dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded p-1 mb-2 w-full" value={suggestion} onChange={(e) => handleSuggestionChange(e)} />
+              <input type="text" placeholder="Answer" className="dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded p-1 mb-2 w-full" value={answer} onChange={(e) => handleAnswerChange(e)} />
             </div>
-          ))
-          }
-          <div className="flex flex-row w-full">
-            <input type="text" placeholder="Question" className="w-1/2" value={suggestion} onChange={(e) => handleSuggestionChange(e)} />
-            <input type="text" placeholder="Answer" className="w-1/2" value={answer} onChange={(e) => handleAnswerChange(e)} />
+            <div className="flex flex-row gap-5">
+              <button className="w-full dark:bg-blue-500 bg-blue-300 text-white rounded p-2 mt-2" onClick={() => handleAddSuggestionClick(suggestion, answer)}>Add Suggestion</button>
+            </div>
           </div>
-          <div className="flex flex-row gap-5">
-            <button className="bg-red-400" onClick={() => handleAddSuggestionClick(suggestion, answer)}>Add Suggestion</button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex w-full h-screen justify-center items-center text-center">Not Authorized</div>
-      )}
+        ) : (
+          <div className="flex w-full h-screen justify-center items-center text-center">Not Authorized</div>
+        )}
+      </div>
     </div>
   );
 }

@@ -233,7 +233,7 @@ export default function Home() {
 
   return (
     <div className="bg-white dark:bg-black h-screen w-full p-5 overflow-hidden flex no-scrollbar flex-col">
-      <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
+      <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar}/>
       <div className="flex flex-row flex-grow h-full no-scrollbar text-white">
         <div className={`bg-black text-white transition-all py-2 duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12' : 'w-0'}`}>
           <Sidebar messages={historyMsg ? historyMsg : false} selection={handleSuggestionSubmit} state={historySideBar} setMessages={setMessages} isOpen={isOpen} setIsOpen={setIsOpen} />
