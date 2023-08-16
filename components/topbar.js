@@ -20,7 +20,7 @@ const TopBar = ({sideBar, setSidebar, admin}) => {
     <div className="w-full flex gap-10 justify-between items-center bg-white p-1 pr-14 dark:bg-black text-white">
       <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-black dark:text-white">
         {admin ? null : <button className="transition-all hover:scale-110 p-2 rounded-full duration-100" onClick={() => setSidebar(!sideBar)}><HiMiniBars4 /></button>}
-        <div>AmFOSS Bot.</div>
+        <div className={`${admin ? 'pl-10' : ''}`}>AmFOSS Bot.</div>
       </div>
       <div className="flex flex-row items-center justify-center gap-10">
         <button className="relative bg-gray-400/20 hover:bg-gray-400 transition-all hover:scale-110 p-2 rounded-full duration-100 inline-block text-lg group dark:text-white text-black" onClick={() => handleThemeChange()}>

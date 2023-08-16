@@ -24,7 +24,6 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
-  console.log(suggestionList);
 
   useEffect(() => {
     if(chat.current) {
@@ -43,28 +42,26 @@ export default function Home() {
     setMessage(e.target.value);
   };
 
-  async function sendChatQuery() {
+  async function sendChatQuery(userInput) {
     try {
       const response = await fetch('http://localhost:4000/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: 'I love you' }), // Pass the request body here
+        body: JSON.stringify({ message: userInput }), // Pass the request body here
       });
 
       const data = await response.json();
       console.log('Response from chat API:', data);
+      return data; // Return the response data
     } catch (error) {
       console.error('Error:', error);
+      throw error; // Throw the error to be handled by the calling function
     }
   }
 
-  sendChatQuery();
-
   const checkEnrollment = async (user) => {
-    console.log("enrollment is being called.")
-    console.log(user);
     try {
       const userDocRef = doc(db, "users", user.uid);
       const userDocSnapshot = await getDoc(userDocRef);
@@ -153,37 +150,60 @@ export default function Home() {
     );
   }
 
+  let isCalled = false;
+
   function BotMessage ({ message }) {
-    const botResponse = BotResponse(message);
+    const [botResponse, setBotResponse] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchBotResponse = async () => {
+        const response = await BotResponse(message);
+        setBotResponse(response);
+        setIsLoading(false);
+      };
+
+      fetchBotResponse();
+    }, []);
+
     const typing = botResponse.split('').map((char, index) => (
-      <span key={index} style={{animationDelay: index * 0.03 + 's'}}>{char}</span>
+      <span key={index} style={{ animationDelay: index * 0.03 + 's' }}>{char}</span>
     ));
 
     return (
       <div className="bg-[#131314] max-h-min rounded-3xl flex flex-row p-6 gap-5">
         <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
         <div className="typewriter">
-          {typing}
+          {isLoading ?
+            <div className="bouncing-loader">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            :
+            typing
+          }
         </div>
       </div>
     );
   }
 
-  function BotResponse(message) {
+  async function BotResponse(message) {
+    if (isCalled) {
+      return;
+    }
+    isCalled = true;
     const text = message.toLowerCase();
-    if(text.includes("registration")) {
-      return "Registration link: https://amfoss.in";
+    try {
+      const res = await sendChatQuery(text);
+      if (res) {
+        console.log("message from the server - botResponse" +res.response);
+        isCalled = false;
+        return res.response;
+      }
+    } catch (error) {
+      return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions."
     }
-    if(text.includes("hi") || text.includes("hello") || text.includes("hey")) {
-      return "Hi, welcome to amFOSS Bot. 😄";
-    }
-    if(text.includes("amfoss")) {
-      return "amFOSS is a student-run community that aims to promote open-source software. 😄";
-    }
-    if(text.includes("amrita")) {
-      return "Amrita Vishwa Vidyapeetham is a private deemed-to-be-university located in Coimbatore, Tamil Nadu, India. 😄";
-    }
-    return message;
   }
 
   function BlobMessage({ message }) {
@@ -284,7 +304,7 @@ export default function Home() {
               <div className="carousel-container custom-scrollbar">
                 <div className="carousel custom-scrollbar" ref={carouselRef}>
                   {suggestionList.suggestions?.map((suggestion, index) => (
-                    <button key={index} className="carousel-item whitespace-nowrap w-full" onClick={() => addBlobSuggestion(suggestion)}>
+                    <button key={index} className="carousel-item whitespace-nowrap max-w-min px-4 py-2" onClick={() => addBlobSuggestion(suggestion)}>
                       {suggestion.suggestion}
                     </button>
                   ))}
