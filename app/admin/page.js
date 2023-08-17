@@ -1,6 +1,5 @@
 "use client";
 
-import { UserAuth } from '@/app/context/AuthContext'
 import { useEffect, useState } from 'react'
 import { db } from '@/app/firebase'
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
@@ -17,7 +16,9 @@ export const getSuggestions = async () => {
 }
 
 const Admin = () => {
-  const { user } = UserAuth();
+  const [authorised, setAuthorised] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   const [suggestionList, setSuggestionList] = useState({});
   const [suggestion, setSuggestion] = useState('');
   const [answer, setAnswer] = useState('');
@@ -39,7 +40,6 @@ const Admin = () => {
       console.log("Error updating document: ", error);
     }
   }
-
 
   const handleAddSuggestionClick = async (suggestion, answer) => {
     const docRef = doc(db, "data", "suggestions");
@@ -68,6 +68,26 @@ const Admin = () => {
     }
   }
 
+  const handleUsernameChange = (event) => {
+    setUserName(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (userName === "AmFOSS_ChatBoT" && password === "AaSOFmto_SCBhT") {
+      setAuthorised(true);
+    } else {
+      alert("Wrong username or password");
+    }
+    setPassword('');
+    setUserName('');
+  };
+
   const handleSuggestionChange = (e) => {
     setSuggestion(e.target.value);
   }
@@ -77,11 +97,11 @@ const Admin = () => {
   }
 
   return (
-    <div>
+    <div className="w-screen h-screen">
       <TopBar admin={true}/>
-      <div className="dark:bg-black dark:text-white flex flex-col min-h-screen py-2 px-4">
+      <div className="dark:bg-black dark:text-white flex flex-col h-full py-2 px-4">
         <h1 className="text-xl text-center dark:text-gray-100">Admin Page</h1>
-        {user?.email === "pranavk0217@gmail.com" ? (
+        {authorised ? (
           <div className="p-5 bg-white dark:bg-black transition-all ease-in-out rounded shadow-sm w-full">
             {suggestionList.suggestions?.map((suggestion, index) => (
               <div key={index} className="flex flex-row w-full justify-between mb-2">
@@ -103,7 +123,25 @@ const Admin = () => {
             </div>
           </div>
         ) : (
-          <div className="flex w-full h-screen justify-center items-center text-center">Not Authorized</div>
+          <div className="flex w-full h-screen justify-center items-center text-center">
+            <form className="login-form" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                className="input-field"
+                placeholder="Username"
+                value={userName}
+                onChange={handleUsernameChange}
+              />
+              <input
+                type="password"
+                className="input-field"
+                placeholder="Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <button type="submit" className="submit-button">Sign in</button>
+            </form>
+          </div>
         )}
       </div>
     </div>
