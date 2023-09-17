@@ -9,9 +9,11 @@ export const getSuggestions = async () => {
   try {
     const docRef = doc(db, "data", "suggestions");
     const docSnap = await getDoc(docRef);
-    return docSnap.data();
-  } catch {
-    console.log("error");
+    const data = docSnap.data();
+    return data || { suggestions: [] }; // Provide a default if data is undefined
+  } catch (error) {
+    console.log("Error getting suggestions: ", error);
+    return { suggestions: [] }; // Handle the error and provide a default value
   }
 }
 
@@ -19,7 +21,8 @@ const Admin = () => {
   const [authorised, setAuthorised] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [suggestionList, setSuggestionList] = useState({});
+  const [suggestionList, setSuggestionList] = useState({ suggestions: [] });
+
   const [suggestion, setSuggestion] = useState('');
   const [answer, setAnswer] = useState('');
 
@@ -79,7 +82,7 @@ const Admin = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (userName === "AmFOSS_ChatBoT" && password === "AaSOFmto_SCBhT") {
+    if (userName === "admin" && password === "admin") {
       setAuthorised(true);
     } else {
       alert("Wrong username or password");
