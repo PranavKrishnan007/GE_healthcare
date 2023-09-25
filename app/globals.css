@@ -235,9 +235,8 @@ html {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #f0f0f0;
+   
 }
 
 .input-field {
@@ -250,13 +249,140 @@ html {
 
 .submit-button {
     padding: 10px 20px;
-    background-color: #4caf50;
+    background-color: #4A25E1;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+    background-color: #7B5AFF;
+}
+
+.card {
+  width: 600px;
+  height: 604px;
+  transition: all 0.2s;
+  position: relative;
+  cursor: pointer;
+  
+}
+
+.card-inner {
+  width: inherit;
+  height: inherit;
+  background: rgba(255,255,255,.05);
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+}
+
+
+
+.circle {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(#4a25e14b, #7b5aff65);
+  border-radius: 50%;
+  position: absolute;
+  animation: move-up6 2s ease-in infinite alternate-reverse;
+}
+
+.circle:nth-child(1) {
+  top: -25px;
+  left: -25px;
+}
+
+.circle:nth-child(2) {
+  bottom: -25px;
+  right: -25px;
+  animation-name: move-down1;
+}
+
+@keyframes move-up6 {
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes move-down1 {
+  to {
+    transform: translateY(10px);
+  }
+}
+.dark .card-inner {
+    background: rgba(255, 255, 255, 0.199);
+     box-shadow: 0 0 10px rgba(255, 255, 255, 0.377);
+}
+.dark .circle {
+    background: radial-gradient(#4a25e1, #7b5aff);
+}
+
+.upload-card {
+  height: 300px;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 30px rgba(0, 0, 0, .2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 5px;
+  background-color:  #4a25e123;
+}
+
+.upload-card-header {
+  flex: 1;
+  width: 100%;
+  border: 2px dashed #4a25e1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.upload-card-header svg {
+  height: 100px;
+}
+
+.upload-card-header p {
+  text-align: center;
+  
+}
+
+.upload-card-footer {
+  background-color: #4a25e1;
+  width: 100%;
+  height: 40px;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+ 
+  border: none;
+}
+
+.upload-card-footer svg {
+  height: 130%;
+  fill: #ffffff;
+  background-color: rgba(70, 66, 66, 0.103);
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  box-shadow: 0 2px 30px rgba(0, 0, 0, 0.205);
+}
+
+.upload-card-footer p {
+  flex: 1;
+  text-align: center;
+}
+
+#file-upload {
+  display: none;
 }
