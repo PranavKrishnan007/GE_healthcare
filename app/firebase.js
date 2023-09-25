@@ -5,13 +5,13 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_API_ID,
-  measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
+  apiKey: "AIzaSyD8dimnHS6bj_90SF-Gut8trnRyAlGzu8s",
+  authDomain: "gehealthcare-04.firebaseapp.com",
+  projectId: "gehealthcare-04",
+  storageBucket: "gehealthcare-04.appspot.com",
+  messagingSenderId: "143543922321",
+  appId: "1:143543922321:web:4f5f02c3eceb9c2d419930",
+  measurementId: "G-T6ZJJ8HG1T",
 };
 
 // Initialize Firebase
