@@ -1,0 +1,32 @@
+.preloader {
+  height: 100vh;
+  /*height: calc(var(--vh, 1vh) * 100);*/
+  width: 100%;
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #121314;
+  overflow: hidden !important;
+
+  .texts-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    overflow: hidden;
+    font-weight: 800;
+    opacity: 0;
+    color: black;
+
+    @include media("<=phone") {
+      font-size: 17px;
+      width: 240px;
+    }
+  }
+}
