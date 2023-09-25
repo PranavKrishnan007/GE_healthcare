@@ -21,7 +21,8 @@ const Admin = () => {
   const [authorised, setAuthorised] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [suggestionList, setSuggestionList] = useState({});
+  const [suggestionList, setSuggestionList] = useState({ suggestions: [] });
+
   const [suggestion, setSuggestion] = useState('');
   const [answer, setAnswer] = useState('');
 
