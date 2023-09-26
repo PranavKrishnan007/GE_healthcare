@@ -180,7 +180,7 @@ export default function Home() {
             fetchBotResponse();
         }, []);
 
-        const typing = botResponse.split('').map((char, index) => (
+        const typing = botResponse?.split('').map((char, index) => (
             <span key={index} style={{ animationDelay: index * 0.03 + 's' }}>{char}</span>
         ));
 
