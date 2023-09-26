@@ -1,5 +1,6 @@
 "use client";
 
+import useSpeechToText from "react-hook-speech-to-text";
 import { useEffect, useState, useRef } from 'react';
 import React from 'react';
 import TopBar from '@/components/topbar/topbar'
@@ -18,11 +19,11 @@ import Select, { selectClasses } from '@mui/joy/Select';
 import Preloader from "@/components/preloader/preloader";
 import logo from '@/assets/AI Avatar.svg';
 import Link from "next/link";
-
+import {BsFillMicFill} from "react-icons/bs";
+import { FaRegDotCircle } from "react-icons/fa";
 
 
 export default function Home() {
-
   const { user } = UserAuth();
   const [historySideBar, setHistorySideBar] = useState(true);
   const carouselRef = useRef();
@@ -30,12 +31,32 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [congrats, setCongrats] = useState(false);
   const [historyMsg, setHistoryMsg] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
   const [language, setLanguage] = useState('en');
   const [selectedValue, setSelectedValue] = useState('');
   const [toggle, setToggle] = useState(false);
+
+  const {
+    error,
+    interimResult,
+    isRecording,
+    results,
+    startSpeechToText,
+    stopSpeechToText,
+  } = useSpeechToText({ continuous: true });
+
+  if (error) {
+    return <p>Web Speech API is not available in this browser 🤷‍</p>;
+  }
+
+  useEffect(() => {
+    const transcript = results[0]?.transcript || interimResult;
+    setMessage(transcript);
+  }, [results, interimResult]);
+
+  
 
   useEffect(() => {
     if (chat.current) {
@@ -318,60 +339,115 @@ export default function Home() {
       {/*  </button>*/}
       {/*</div>*/}
       <Preloader />
-      <div>
-
-      </div>
+      <div></div>
       <div className="flex flex-row dark:bg-[#121314] flex-grow h-full no-scrollbar pt-2 text-white">
-        <div className={`dark:text-white dark:shadow-[#000000] shadow-2xl shadow-[#D6C7E7]  text-white transition-all  duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12 z-20' : 'w-0'}`}>
-          <Sidebar messages={historyMsg ? historyMsg : false} selection={handleSuggestionSubmit} state={historySideBar} setMessages={setMessages} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <div
+          className={`dark:text-white dark:shadow-[#000000] shadow-2xl shadow-[#D6C7E7]  text-white transition-all  duration-300 no-scrollbar ease-in-out ${
+            historySideBar ? "w-3/12 z-20" : "w-0"
+          }`}
+        >
+          <Sidebar
+            messages={historyMsg ? historyMsg : false}
+            selection={handleSuggestionSubmit}
+            state={historySideBar}
+            setMessages={setMessages}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
         </div>
-        <div className={`ease-in-out w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
+        <div
+          className={`ease-in-out w-full p-2 no-scrollbar flex-grow overflow-hidden ${
+            historySideBar ? "pr-12" : "pr-16"
+          } transition-all ${historySideBar ? "pl-10" : "pl-16"} `}
+        >
           <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
           {isOpen && (
             <div className="w-screen h-screen z-40 fixed top-0 right-0 backdrop-blur-2xl flex items-center justify-center">
               <div className="p-10 transition-all ease-in-out bg-white dark:bg-black shadow-2xl rounded-3xl flex flex-col relative items-center justify-center gap-4">
                 {/*<Image src={logo} alt={"oops image not found"} width={50} height={50} />*/}
-                <button className="absolute top-3 right-3" onClick={() => setIsOpen(!isOpen)}><IoCloseCircleOutline size={20} /></button>
+                <button
+                  className="absolute top-3 right-3"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <IoCloseCircleOutline size={20} />
+                </button>
                 <div className="text-center">
-                  {congrats ? 'You will be notified when Praveshan begins' : `Do you wish to receive notifications to ${user.email}`}
+                  {congrats
+                    ? "You will be notified when Praveshan begins"
+                    : `Do you wish to receive notifications to ${user.email}`}
                 </div>
                 {congrats !== true && (
                   <button className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">
-                    <span
-                      className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                    <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
                     <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                      <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      <svg
+                        className="w-5 h-5 text-green-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
                       </svg>
                     </span>
                     <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                      <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      <svg
+                        className="w-5 h-5 text-green-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
                       </svg>
                     </span>
-                    <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white" onClick={() => handleDiscordSend(user)}>Continue</span>
+                    <span
+                      className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white"
+                      onClick={() => handleDiscordSend(user)}
+                    >
+                      Continue
+                    </span>
                   </button>
-                )}n
+                )}
+                n
               </div>
             </div>
           )}
           <div className="w-full  no-scrollbar text-black  dark:text-white bg-transparent flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
-            <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5 pr-8' : 'px-20'} py-6 transition-all ease-in-out duration-300`}>
+            <div
+              ref={chat}
+              className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${
+                historySideBar ? "pl-5 pr-8" : "px-20"
+              } py-6 transition-all ease-in-out duration-300`}
+            >
               <div className="h-full rounded-3xl flex  flex-col items-center justify-center p-6 gap-5">
                 <div className="flex mt-96 flex-row">
-                  <Image src={logo} alt={"oops image not found"} width={35} height={35} />
+                  <Image
+                    src={logo}
+                    alt={"oops image not found"}
+                    width={35}
+                    height={35}
+                  />
                   <p className="text-2xl dark:text-white  font-bold text-black px-3">
                     BLEH
                   </p>
                 </div>
                 <div className="typewriter w-3/4 text-center mb-96">
-                  Seeking reliable healthcare information, immediate assistance, or simply a trusted friend to guide you
-                  on your wellness journey? Look no further – meet HealthAssist Bot,
-                  <span
-                    className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
-                    <Link href="/about">
-                      About.
-                    </Link>
+                  Seeking reliable healthcare information, immediate assistance,
+                  or simply a trusted friend to guide you on your wellness
+                  journey? Look no further – meet HealthAssist Bot,
+                  <span className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
+                    <Link href="/about">About.</Link>
                   </span>
                   <div className="mt-8">
                     <Select
@@ -381,23 +457,36 @@ export default function Home() {
                       sx={{
                         width: 240,
                         [`& .${selectClasses.indicator}`]: {
-                          transition: '0.2s',
+                          transition: "0.2s",
                           [`&.${selectClasses.expanded}`]: {
-                            transform: 'rotate(-180deg)',
+                            transform: "rotate(-180deg)",
                           },
                         },
                       }}
                       className="dark:bg-[#121314] dark:text-white mx-auto"
                     >
-                      <Option value="en" onClick={() => changeLanguage("en")}>English</Option>
-                      <Option value="de" onClick={() => changeLanguage("de")}>German</Option>
-                      <Option value="fr" onClick={() => changeLanguage("fr")}>French</Option>
-                      <Option value="ru" onClick={() => changeLanguage("ru")}>Russian</Option>
-                      <Option value="ko" onClick={() => changeLanguage("ko")}>Korean</Option>
-                      <Option value="it" onClick={() => changeLanguage("it")}>Italian</Option>
-                      <Option value="ja" onClick={() => changeLanguage("ja")}>Japanese</Option>
+                      <Option value="en" onClick={() => changeLanguage("en")}>
+                        English
+                      </Option>
+                      <Option value="de" onClick={() => changeLanguage("de")}>
+                        German
+                      </Option>
+                      <Option value="fr" onClick={() => changeLanguage("fr")}>
+                        French
+                      </Option>
+                      <Option value="ru" onClick={() => changeLanguage("ru")}>
+                        Russian
+                      </Option>
+                      <Option value="ko" onClick={() => changeLanguage("ko")}>
+                        Korean
+                      </Option>
+                      <Option value="it" onClick={() => changeLanguage("it")}>
+                        Italian
+                      </Option>
+                      <Option value="ja" onClick={() => changeLanguage("ja")}>
+                        Japanese
+                      </Option>
                     </Select>
-
                   </div>
                 </div>
               </div>
@@ -407,7 +496,11 @@ export default function Home() {
               )}
             </div>
             <div className="flex items-center mx-auto w-2/3 justify-center pb-6 flex-col">
-              <div className={`carousel-container custom-scrollbar ${historySideBar ? 'pl-5 pr-8' : 'px-20'} transition-all pb-3 ease-in-out duration-300`}>
+              <div
+                className={`carousel-container custom-scrollbar ${
+                  historySideBar ? "pl-5 pr-8" : "px-20"
+                } transition-all pb-3 ease-in-out duration-300`}
+              >
                 <div className="carousel custom-scrollbar" ref={carouselRef}>
                   {suggestionList?.suggestions?.map((suggestion, index) => (
                     <button
@@ -420,22 +513,50 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <form className="w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  className="w-full outline-none border border-gray-400/50 dark:border-white/70 px-10 py-2 dark:bg-[#121314] rounded-full text-md dark:text-white dark:placeholder:text-white/90 focus:border-blue-300 hover:border-white"
-                  placeholder="Post your question here"
-                  value={message}
-                  onChange={handleMessageChange}
-                />
-                <button type="submit" className="text-lg px-12 rounded-full text-white bg-gradient-to-b from-indigo-500 via-indigo-600 to-blue-700 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium  py-2 text-center mr-2 mb-2 ">
-                  Submit
+              <div className="flex justify-center items-center ">
+                <button
+                  onClick={isRecording ? stopSpeechToText : startSpeechToText}
+                >
+                  {isRecording ? (
+                    <div className="flex justify-center items-center gap-x-2">
+                      <div className="animate-pulse text-green-600 ">
+                        <FaRegDotCircle size={25} />
+                      </div>
+                      <button type="button" className="text-indigo-500 pr-6 ">
+                        <BsFillMicFill size={25} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center items-center ">
+                      <button type="button" className="text-indigo-500 px-6 ">
+                        <BsFillMicFill size={25} />
+                      </button>
+                    </div>
+                  )}
                 </button>
-              </form>
+                <form
+                  className="w-full flex flex-row items-center justify-center gap-6"
+                  onSubmit={handleSubmit}
+                >
+                  <input
+                    type="text"
+                    className="w-full outline-none border border-gray-400/50 dark:border-white/70 px-10 py-2 dark:bg-[#121314] rounded-full text-md dark:text-white dark:placeholder:text-white/90 focus:border-blue-300 hover:border-white"
+                    placeholder="Post your question here"
+                    value={message}
+                    onChange={handleMessageChange}
+                  />
+                  <button
+                    type="submit"
+                    className="text-lg px-12 rounded-full text-white bg-gradient-to-b from-indigo-500 via-indigo-600 to-blue-700 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium  py-2 text-center mr-2 mb-2 "
+                  >
+                    Submit
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
