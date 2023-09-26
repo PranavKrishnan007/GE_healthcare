@@ -61,20 +61,28 @@ export default function Home() {
 
   async function sendChatQuery(userInput) {
     try {
-      const response = await fetch('https://dialogflow-amfoss-server.onrender.com', {
-        method: 'POST',
+      // Define the URL with query parameters
+      const url = new URL('/api/prompt', 'http://35.229.41.32:4500');
+
+      // Set any query parameters (if needed)
+      url.searchParams.append('prompt', 'installation procedure for ipp module');
+
+      const response = await fetch(url, {
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: userInput }), // Pass the request body here
+          'Accept': 'application/json' // Specify the Accept header for JSON response
+        }
       });
 
-      const data = await response.json();
-      console.log('Response from chat API:', data);
-      return data; // Return the response data
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+      console.log('Successful Response:', responseData);
+      return responseData.data.msg;
     } catch (error) {
       console.error('Error:', error);
-      throw error; // Throw the error to be handled by the calling function
     }
   }
 
@@ -184,7 +192,9 @@ export default function Home() {
       fetchBotResponse();
     }, []);
 
-    const typing = botResponse.split('').map((char, index) => (
+    const temp = "this me testing this"
+
+    const typing = botResponse?.split('').map((char, index) => (
       <span key={index} style={{ animationDelay: index * 0.03 + 's' }}>{char}</span>
     ));
 
