@@ -7,23 +7,11 @@ import "./about.css";
 import Preloader from "@/components/preloader/preloader";
 import img_dark from '@/assets/Darkmode.png'
 import img_light from '@/assets/Lightmode.png'
+import img_chatbox from '@/assets/chatbox.png'
 import Image from "next/image";
-import logo from "@/assets/AI Avatar.svg";
-
+import Link from 'next/link';
 
 const AboutPage = () => {
-    // const element = document.getElementById('animated-element');
-    // const stages = ['-translate-y-[-1px]', '-translate-y-[74px]', '-translate-y-[150px]', '-translate-y-[227px]'];
-    // let currentStage = 0;
-    //
-    // function animateElement() {
-    //     element.classList.add(stages[currentStage]);
-    //     currentStage = (currentStage + 1) % stages.length;
-    //     element?.classList.remove(stages[currentStage]);
-    // }
-    //
-    // setInterval(animateElement, 1000);
-
     const scrollRef = useRef(null);
     useScrollSnap({ref: scrollRef, duration: 50, delay: 30});
     return (
@@ -36,19 +24,19 @@ const AboutPage = () => {
                         <div className="flex w-[95%] mt-3 justify-center text-white font-bold px-6 rounded p-2 mx-auto">
                             <div
                                 className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
-                                size="medium">How to use?
+                                size="medium"><Link href={"#How_to_use"}>How to use?</Link>
                             </div>
                             <div
                                 className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
-                                size="medium">Button
+                                size="medium"><Link href={"#"} >Home</Link>
                             </div>
                             <div
                                 className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
-                                size="medium">Button
+                                size="medium"><Link href={"#chatbox"}>Chatbox</Link>
                             </div>
                             <div
                                 className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
-                                size="medium">Try it now
+                                size="medium"><Link href="/">Try it now</Link>
                             </div>
                         </div>
                     </div>
@@ -56,20 +44,20 @@ const AboutPage = () => {
                         className="scroll-snap bg-dotted-spacing-[100px] text-white p-12 h-screen bg-dotted-[#464646] scale-125 transition-all overflow-clip duration-1000 bg-dotted-radius-[1.2px] group hover:scale-110 hover:bg-dotted-radius-[1.1px] ease-in-out">
                         <div className="mt-32 w-[80%] mx-auto group-hover:scale-110 transition-all duration-1000">
                             <div
-                                className="font-normal text-white/40  text-sm px-2 py-2 rounded mx-auto  bg-[#1A1A1A] ">
+                                className="font-normal text-white/40  font-mono text-sm px-2 py-2 rounded mx-auto  bg-[#1A1A1A] ">
                            <span className="p-1 px-2 mr-2 bg-cyan-400  rounded-md text-black ">
                                bleh
                            </span>
-                                Click on "Try It Now" button that directs users to the chatbot interface.
+                                Click on "Try It Now" button to redirect to the chatbot interface.
                             </div>
                             <div className=" flex lg:flex-row flex-col p-8 items-center h-[600px]">
-                                <div className="w-full h-full">
+                                <div className="w-full mt-32 h-full">
                                     <div
-                                        className="flex-initial text-left font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center mt-16 text-3xl  lg:text-7xl  py-4">
+                                        className="flex-initial text-left font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center mt-16 text-3xl  lg:text-7xl  py-4">
                                         Welcome to Your Intelligent Healthcare Documentation Companion!
                                     </div>
                                     <div className="rounded-md text-center  ">
-                                        <button className="flex text-gray-500 text-left h-full">
+                                        <button className="flex text-gray-500 text-left h-full active:text-cyan-500">
                                             <span className="Btn">
                                                  <span className="svgContainer">
                                                    <svg fill="white" viewBox="0 0 496 512" height="1.6em"><path
@@ -77,14 +65,14 @@ const AboutPage = () => {
                                                  </span>
                                                 <span className="BG"></span>
                                             </span>
-                                            <span className="px-4 my-auto">
-                                                WOOW FACTOR 100% |
+                                            <span className="px-4 my-auto font-bold">
+                                               CONNECT WITH US
                                             </span>
                                         </button>
                                     </div>
                                 </div>
-                                <div className="w-full mt-40 tracking-wide text-left flex flex-row-reverse  h-full">
-                                    <div className="w-2/3 px-4 ">
+                                <div className="w-1/3 mt-40 font-mono tracking-wide  text-left flex flex-row-reverse  h-full">
+                                    <div className=" px-4 ">
                                         <div>
                                             Navigating the vast world of GE Healthcare's documentation has never been
                                             easier.
@@ -102,7 +90,7 @@ const AboutPage = () => {
                     </div>
                 </div>
                 <div
-                    className="flex items-center justify-center pr-4 text-violet-900  text-7xl font-bold h-[800px] w-full">
+                    className="flex items-center justify-center pr-4 text-violet-900  text-4xl  lg:text-7xl font-bold h-[800px] w-full">
                     Made for the
                     <div className="overflow-clip text-center p-1 h-[80px]">
                         <div id="animated-element" className="animate-translate-loop ">
@@ -121,38 +109,92 @@ const AboutPage = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-center pr-4 text-violet-900 bg-stone-900 text-7xl font-bold h-[800px] w-full">
-                    <div className="one-div"></div>
+                <div className="flex items-center justify-center pr-4  bg-stone-900   min-h-[800px] w-full">
+                    <div className="w-full flex px-12 lg:flex-row flex-col p-8 items-center min-h-[600px]">
+                        <div className="flex flex-col  items-center justify-center w-full  h-full">
+                            <div className="one-div"></div>
+                        </div>
+                        <div className="w-4/5 flex-col text-left px-2 mx-auto text-xl text-white tracking-wide items-center h-full">
+                            <p className="text-white/50 mb-16 font-mono">
+                                Software Layers
+                            </p>
+                            <p className="my-12 font-mono">
+                                <span className="font-extrabold font-mono pr-2">
+                                    Frontend:
+                                </span>
+                                 We use Next.js for an interactive, fast, and modern user interface.
+                            </p>
+                            <p className="my-12 font-mono">
+                                 <span className="font-extrabold font-mono pr-2">
+                                    API:
+                                </span>
+                                  FastAPI ensures rapid, secure communication between you and the chatbot.
+                            </p>
+                            <p className="my-12 font-mono">
+                                 <span className="font-extrabold font-mono pr-2">
+                                    ML model:
+                                </span>
+                                   it’s based on a variant of Llama 2, understands your conversation context for more accurate responses.
+                            </p>
+                            <p className="my-12 font-mono">
+                                 <span className="font-extrabold font-mono pr-2">
+                                    Chat History Preserved:
+                                </span>
+                                 Your chat history is securely stored in Firebase, ready for easy access whenever you need it.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
                 <div>
-                    <div className="h-fit bg-white flex flex-col">
-                        <div className="px-8 border-t border-t-gray-300 my-6 flex-grow">
-                            <div className="flex lg:flex-row flex-col border-r  p-4 border-gray-300 h-full">
-                                <div className="w-full h-full p-4 ">
+                    <div className="h-fit  bg-white flex flex-col">
+                        <div className="px-8 border-t border-t-gray-300  flex-grow">
+                            <div className="flex  py-16 lg:flex-row flex-col border-r p-4 border-gray-300 h-full">
+                                <div className="w-full h-full p-4">
                                     <div className="flex-initial px-1 text-center text-6xl py-4 font-bold">
-                                        <div className="p-4">
-                                            2 Flavours
+                                        <div className="p-4 font-['Roboto'] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center my-16">
+                                            Dual Visual Themes
                                         </div>
+                                        <div></div>
                                         <Image src={img_light} alt={"oops image not found"}
-                                               className="w-[90%] mx-auto shadow-xl"/>
+                                               className="w-[90%] mx-auto shadow-xl rounded-2xl hover:scale-105 transition-all duration-1000 ease-in-out"/>
                                     </div>
                                     <div className="flex-auto rounded-md text-center p-2 mx-2">
-                                        <p className="text-black  h-full">
-                                            its guud , woow , amazing should try it once in your life be happy with it
+                                        <p className="text-black font-mono text-black/70  h-full">
+                                            A clean and bright interface for a refreshing chat experience
                                         </p>
                                     </div>
                                 </div>
                                 <div className="w-full h-full p-4">
                                     <Image src={img_dark} alt={"oops image not found"}
-                                           className="w-[90%] mx-auto shadow-xl shadow-black/60"/>
+                                           className="w-[90%] mx-auto shadow-xl rounded-2xl shadow-black/60 hover:scale-105 transition-all duration-1000 ease-in-out"/>
+                                    <div className="flex-auto rounded-md mt-4 text-center p-2 mx-2">
+                                        <p className="text-black font-mono text-black/70  h-full">
+                                            Elegant and easy on the eyes, perfect for nighttime conversations.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div className="border-t border-b h-14 text-center px-14 my-auto py-4 border-gray-300">
-                            <div className="font-bold text-xl">
-                                <div id="scroll-container">
-                                    <div id="scroll-text" className="animate-my-animation">
-                                        This is scrolling text.
+                            <div className="bar overflow-clip font-bold text-xl">
+                                <div id="scroll-container ">
+                                    <div id="scroll-text" className="bar_content w-fit overflow-clip font-mono text-clip">
+                                        <span className="px-24">
+                                            Scalable
+                                        </span>
+                                        <span className="px-24">
+                                            Secure
+                                        </span>
+                                        <span className="px-24">
+                                            Contextual Responses
+                                        </span>
+                                        <span className="px-24">
+                                            Multi-lingual
+                                        </span>
+                                        <span className="px-24">
+                                            Easy to Use
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -166,23 +208,87 @@ const AboutPage = () => {
                             <div className="flex-initial px-1 text-3xl my-auto font-bold text-white">
                                 B.
                             </div>
-                            <div className="my-auto ml-20 text-white">
-                                <div
-                                    className="rounded-md px-2 ml-20 text-white hover:bg-stone-900 font-sans hover:font-bold"
-                                    size="medium">Home
+                        </div>
+                        <div id="chatbox">
+
+                            <div className=" flex px-12 lg:flex-row flex-col p-8 items-center min-h-[600px]">
+                                <div className="w-full pl-12 mx-auto h-full">
+                                    <div
+                                        className="flex-initial mx-auto text-left font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center mt-16 text-3xl  lg:text-7xl  py-4">
+                                        Extend Your Conversations Anywhere
+                                    </div>
+                                    <div className="text-white mx-auto font-mono tracking-wide  text-left">
+                                        <div>
+                                            Take your conversations beyond our chatbot's interface. With our floating
+                                            chat bubble extension, you can embed the chatbot into any website or
+                                            application, extending its capabilities to new horizons.
+                                        </div>
+                                        <div
+                                            className="mt-2 hover:text-white hover:cursor-pointer text-xl text-cyan-200 underline">
+                                            <Link href="/chatbox">Check it out</Link>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div
-                                    className="rounded-md px-2 ml-20 text-white hover:bg-stone-900 font-sans hover:font-bold"
-                                    size="medium">Work
-                                </div>
-                                <div
-                                    className="rounded-md px-2 ml-20 text-white hover:bg-stone-900 font-sans hover:font-bold"
-                                    size="medium">Resume
+                                <div className="w-full mt-40 tracking-wide mx-auto h-full">
+                                    <div className="w-2/3 mx-auto px-4 ">
+                                        <Image src={img_chatbox} alt={"oops image not found"}
+                                               className="w-[90%] mx-auto shadow-xl shadow-black rounded-2xl border-4 border-pink-400 transition-all duration-1000 ease-in-out"/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div>
 
+                        </div>
+                    </div>
+                </div>
+                <div id="How_to_use" className="px-8 border-t border-t-gray-300  flex-grow">
+                    <div className="flex  py-16 lg:flex-row flex-col border-r p-4 border-gray-300 h-full">
+                        <div className="w-full h-full p-4">
+                            <div className="flex-initial px-1 text-center text-6xl py-4 font-bold">
+                                <div className="p-4 font-['Roboto'] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center my-16">
+                                    How to use?
+                                </div>
+                                <div></div>
+                                <Image src={img_light} alt={"oops image not found"}
+                                       className="w-[90%] mx-auto shadow-xl rounded-2xl hover:scale-105 transition-all duration-1000 ease-in-out"/>
+                            </div>
+                            <div className="flex-auto rounded-md text-center p-2 mx-2">
+                                <p className="text-black font-mono text-black/70  h-full">
+                                    A clean and bright interface for a refreshing chat experience
+                                </p>
+                            </div>
+                        </div>
+                        <div className="w-full h-full p-4">
+                            <div className="flex-auto rounded-md mt-4 text-center p-2 mx-2">
+                                <div className="w-4/5 flex-col text-left px-2 mx-auto text-xl text-black tracking-wide items-center h-full">
+                                    <p className="text-white/50 mb-16 font-mono">
+                                        Software Layers
+                                    </p>
+                                    <p className="my-12 font-mono">
+                                <span className="font-extrabold font-mono pr-2">
+                                    Frontend:
+                                </span>
+                                        We use Next.js for an interactive, fast, and modern user interface.
+                                    </p>
+                                    <p className="my-12 font-mono">
+                                 <span className="font-extrabold font-mono pr-2">
+                                    API:
+                                </span>
+                                        FastAPI ensures rapid, secure communication between you and the chatbot.
+                                    </p>
+                                    <p className="my-12 font-mono">
+                                 <span className="font-extrabold font-mono pr-2">
+                                    ML model:
+                                </span>
+                                        it’s based on a variant of Llama 2, understands your conversation context for more accurate responses.
+                                    </p>
+                                    <p className="my-12 font-mono">
+                                 <span className="font-extrabold font-mono pr-2">
+                                    Chat History Preserved:
+                                </span>
+                                        Your chat history is securely stored in Firebase, ready for easy access whenever you need it.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -6,14 +6,15 @@ const PreLoader = () => {
         preLoaderAnim();
     }, []);
     return (
-        <div className="preloader shadow-2xl">
+        <div className="preloader dark:bg-[#121314] shadow-2xl">
             <span className="absolute top-12 left-12 text-2xl dark:text-white  font-bold text-black px-3">
                 BLEH
             </span>
-            <div className="texts-container text-4xl">
-                <span>BOOM,</span>
-                <span>WOOOOW,</span>
-                <span>BOOM.</span>
+            <div className="texts-container dark:text-white text-4xl">
+                <span className="px-2">Believe,</span>
+                <span className="px-2">Learn,</span>
+                <span className="px-2">Explore,</span>
+                <span className="px-2">Help.</span>
             </div>
         </div>
     );

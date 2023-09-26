@@ -16,11 +16,10 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Select, { selectClasses } from '@mui/joy/Select';
 import Preloader from "@/components/preloader/preloader";
 import logo from '@/assets/AI Avatar.svg';
+import Link from "next/link";
 
 
-const setToggle = (b) => {
 
-};
 export default function Home() {
 
   const { user } = UserAuth();
@@ -270,7 +269,7 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-white dark:dark:bg-[#121314] dark:text-white h-screen w-full  overflow-hidden flex no-scrollbar flex-col">
+    <div className="bg-white dark:bg-[#121314] dark:text-white h-screen w-full  overflow-hidden flex no-scrollbar flex-col">
       {/*<div className={`absolute ${ toggle ? 'h-0 opacity-0 z-0 hidden transition-all duration-300' : '' } justify-center items-center flex  bg-indigo-600 min-h-[100%] w-full z-50`}*/}
       {/*     style={{*/}
       {/*         }}>*/}
@@ -328,6 +327,12 @@ export default function Home() {
                   <div className="typewriter w-3/4 text-center mb-96">
                     Seeking reliable healthcare information, immediate assistance, or simply a trusted friend to guide you
                     on your wellness journey? Look no further – meet HealthAssist Bot,
+                    <span
+                        className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
+                      <Link href="/about">
+                        About.
+                      </Link>
+                    </span>
                     <div className="mt-8">
                       <Select
                           placeholder="Select this"
@@ -352,18 +357,6 @@ export default function Home() {
 
                     </div>
                   </div>
-                  {/*<div className="">*/}
-                  {/*  <select*/}
-                  {/*      id="mySelect"*/}
-                  {/*      value={selectedValue}*/}
-                  {/*      onChange={handleSelectChange}*/}
-                  {/*      className="border rounded-lg w-full focus:outline-none focus:ring focus:border-blue-300 mb-20 p-4 mx-2 bg-transparent  border-gray-300 shadow-xl ">*/}
-                  {/*    <option value="" > Select language </option>*/}
-                  {/*    <option value="option1" style={{borderRadius: '99px', padding: '0.5rem 1rem'}} >Option 1</option>*/}
-                  {/*    <option value="option2" style={{borderRadius: '9px', padding: '0.5rem 1rem'}} >Option 2</option>*/}
-                  {/*    <option value="option3" style={{borderRadius: '99px', padding: '0.5rem 1rem'}} >Option 3</option>*/}
-                  {/*  </select>*/}
-                  {/*</div>*/}
                 </div>
               {/* CHAT SECTION */}
               {messages.map((MessageComponent, index) =>

@@ -6,15 +6,19 @@ import { HiMiniBars4 } from 'react-icons/hi2'
 import { AiOutlineUser } from 'react-icons/ai'
 import logo from '@/assets/AI Avatar.svg'
 import "./topbar.scss"
+import Link from "next/link";
 
 const TopBar = ({sideBar, setSidebar, admin}) => {
   const { user } = UserAuth();
+  const [darkMode, setDarkMode] = React.useState(false);
 
   const handleThemeChange = () => {
     if (document.documentElement.classList.contains('dark')) {
       document.documentElement.classList.remove('dark');
+      setDarkMode(false)
     } else {
       document.documentElement.classList.add('dark');
+      setDarkMode(true)
     }
   }
 
@@ -22,12 +26,14 @@ const TopBar = ({sideBar, setSidebar, admin}) => {
     <div className="w-full flex dark:bg-[#121314] gap-10 justify-between items-center ease-in-out transition-all bg-white p-1 pr-14 text-white">
       <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-black dark:text-white">
         {admin ? null : <button className="transition-all hover:scale-110 p-2 rounded-full duration-100" onClick={() => setSidebar(!sideBar)}><HiMiniBars4 /></button>}
-          <Image src={logo} alt={"oops image not found"} width={30} height={30} />
-          <div className={`${admin ? 'pl-4' : ''}`}>BLEH</div>
+         <Link href="/" className="flex flex-row gap-6 items-center justify-center">
+             <Image src={logo} alt={"oops image not found"} width={30} height={30} />
+             <div>BLEH</div>
+         </Link>
       </div>
       <div className="flex flex-row items-center justify-center gap-3">
           <label className="theme-switch scale-50">
-              <input type="checkbox" className="theme-switch__checkbox" onClick={() => handleThemeChange()} />
+              <input type="checkbox" className="theme-switch__checkbox" checked={darkMode} onClick={() => handleThemeChange()} />
               <div className="theme-switch__container">
                   <div className="theme-switch__clouds"></div>
                   <div className="theme-switch__stars-container">
