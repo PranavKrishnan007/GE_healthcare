@@ -134,15 +134,17 @@ const Admin = () => {
      }
    };
   return (
-    <div className="h-full ">
-      <TopBar admin={true} />
-      <div className="dark:bg-black dark:text-white ">
+    <div className="min-h-screen  dark:bg-[#121314]">
+      <div className="px-12">
+        <TopBar admin={true}  />
+      </div>
+      <div className="bg-transparent ">
         <div className="container mx-auto flex flex-col p-8 justify-center items-center ">
           <h1 className="text-3xl font-medium text-center dark:text-gray-100 pb-16">
             Admin Page
           </h1>
           {authorised ? (
-            <div className="p-2 bg-white dark:bg-black transition-all ease-in-out rounded shadow-sm w-full  ">
+            <div className="p-2 bg-transparent transition-all ease-in-out rounded shadow-sm w-full  ">
               <div className="flex justify-center py-5">
                 <div className="upload-card">
                   <div className="upload-card-header">
@@ -263,7 +265,7 @@ const Admin = () => {
               </div>
             </div>
           ) : (
-            <div className="card ">
+            <div className="card">
               <div class="circle"></div>
               <div class="circle"></div>
               <div className="flex w-full justify-center items-center text-center card-inner ">

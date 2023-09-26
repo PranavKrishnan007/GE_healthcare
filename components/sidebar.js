@@ -64,12 +64,12 @@ const Sidebar = ({messages, selection, state, setMessages, isOpen, setIsOpen}) =
         )}
       </div>
 
-      <div className="flex flex-col overflow-hidden px-10 text-center gap-2 pb-8">
+      <div className="flex flex-col overflow-hidden text-center gap-2 pb-8">
         <div className="h-fit">
           {user ? (
-            <button className="flex flex-row items-center hover:shadow-xl active:text-gray-500 transition-all ease-in-out duration-300 dark:bg-[#252525]  bg-gray-100 w-full text-xl shadow-lg rounded-full overflow-hidden px-10 py-2 justify-between gap-4" onClick={handleLogout}>Logout <IoLogOutOutline /></button>
+            <button className="flex flex-row items-center justify-between cursor-pointer w-4/5 mx-auto transition-all bg-gray-200/70 dark:bg-[#252525] dark:text-white text-black px-6 py-2 rounded-lg border-green-400 dark:hover:brightness-70  hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px] hover:shadow-xl hover:shadow-green-300 dark:shadow-green-800 shadow-green-300 active:shadow-none" onClick={handleLogout}>Logout <IoLogOutOutline /></button>
           ) : (
-            <button className="flex flex-row items-center hover:shadow-xl active:text-gray-500 transition-all ease-in-out duration-300 dark:bg-[#252525]  bg-gray-100 w-full text-xl shadow-lg rounded-full overflow-hidden px-10 py-2 justify-between gap-4" onClick={handleSignIn}>Login <IoLogInOutline /></button>
+            <button className="flex flex-row items-center justify-between cursor-pointer w-4/5 mx-auto  transition-all bg-gray-200/70 dark:bg-[#252525] dark:text-white text-black px-6 py-2 rounded-lg border-green-400 dark:hover:brightness-70  hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px] active:border-b-[2px] active:brightness-90 active:translate-y-[2px] hover:shadow-xl hover:shadow-green-300 dark:shadow-green-800 shadow-green-300 active:shadow-none" onClick={handleSignIn}>Login <IoLogInOutline /></button>
           )}
         </div>
       </div>

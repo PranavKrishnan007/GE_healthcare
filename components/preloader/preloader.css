@@ -18,11 +18,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 20px;
+    font-size: 22px;
     overflow: hidden;
     font-weight: 800;
     opacity: 0;
-    color: black;
 
     @include media("<=phone") {
       font-size: 17px;
