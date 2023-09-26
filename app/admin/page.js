@@ -246,6 +246,22 @@ const Admin = () => {
                     Start the Model
                   </button>
                   <button
+                      className="px-5 py-2.5 font-medium bg-red-50 hover:bg-red-100 hover:text-red-600 text-red-500 rounded-lg text-sm"
+                      onClick={async () => {
+                        try {
+                          await axios.get(
+                              "http://34.148.188.181:4600/api/check_health"
+                          );
+                          alert("Request to check health the model has been sent!");
+                        } catch (error) {
+                          console.error("Error:", error);
+                          alert("There was an error in health the model.");
+                        }
+                      }}
+                  >
+                    check health
+                  </button>
+                  <button
                     className="px-5 py-2.5 font-medium bg-red-50 hover:bg-red-100 hover:text-red-600 text-red-500 rounded-lg text-sm"
                     onClick={async () => {
                       try {
