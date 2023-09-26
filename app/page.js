@@ -7,6 +7,7 @@ import { doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
 import { db } from '@/app/firebase'
 import { UserAuth } from '@/app/context/AuthContext'
 import Image from 'next/image'
+import axios from 'axios';
 import Sidebar from '@/components/sidebar'
 import { AiOutlineUser } from 'react-icons/ai'
 import { IoCloseCircleOutline } from 'react-icons/io5'
@@ -32,11 +33,12 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
+  const [language, setLanguage] = useState('en');
   const [selectedValue, setSelectedValue] = useState('');
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
-    if(chat.current) {
+    if (chat.current) {
       const lastMessageElement = chat.current.lastElementChild;
       if (lastMessageElement) lastMessageElement.scrollIntoView({ behavior: 'smooth' });
     }
@@ -99,8 +101,8 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if(!message) return;
-    {user && updateFireMessage(message, user).then(() => getMessages(user).then(msg => setHistoryMsg(msg)));}
+    if (!message) return;
+    { user && updateFireMessage(message, user).then(() => getMessages(user).then(msg => setHistoryMsg(msg))); }
     addBlobMessage(message);
     setMessage('');
   }
@@ -148,7 +150,7 @@ export default function Home() {
     setMessages(oldMessages => [
       ...oldMessages,
       <BlobMessage message={suggestion.suggestion} />,
-      <BotSuggestionMessage message={suggestion.answer} />
+      <BotSuggestionMessage message={suggestion.answer} language={language}/>
     ]);
   }
 
@@ -156,13 +158,28 @@ export default function Home() {
     setMessages(oldMessages => [
       ...oldMessages,
       <BlobMessage message={blobText} />,
-      <BotMessage message={blobText} />
+      <BotMessage message={blobText} language={language} />
     ]);
   };
 
-  function BotSuggestionMessage ({ message }) {
-    const typing = message.split('').map((char, index) => (
-      <span key={index} style={{animationDelay: index * 0.01 + 's'}}>{char}</span>
+  function BotSuggestionMessage({ message, language }) { // Add language prop
+    const [translatedMessage, setTranslatedMessage] = useState(message);
+
+    useEffect(() => {
+      const translateText = async () => {
+        if (language !== 'en') {
+          const url = `https://api.mymemory.translated.net/get?q=${message}&langpair=en|${language}&de=pranavk0217@gmail.com`;
+          const result = await axios.get(url);
+          setTranslatedMessage(result.data.responseData.translatedText);
+        } else {
+          setTranslatedMessage(message);
+        }
+      };
+      translateText();
+    }, [message, language]); // Add language to the dependency array
+
+    const typing = translatedMessage.split('').map((char, index) => (
+      <span key={index} style={{ animationDelay: index * 0.01 + 's' }}>{char}</span>
     ));
 
     return (
@@ -175,23 +192,35 @@ export default function Home() {
     );
   }
 
+  const changeLanguage = (lang) => {
+    console.log(lang);
+    setLanguage(lang);
+  }
+
   let isCalled = false;
 
-  function BotMessage ({ message }) {
+  function BotMessage({ message, language }) {
     const [botResponse, setBotResponse] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
       const fetchBotResponse = async () => {
-        const response = await BotResponse(message);
+        let response = await BotResponse(message);
+        if (language !== 'en') {
+          const translation = await translateText(response, language);
+          response = translation.data.translatedText;
+        }
         setBotResponse(response);
         setIsLoading(false);
       };
-
       fetchBotResponse();
-    }, []);
+    }, [message, language]);
 
-    const temp = "this me testing this"
+    const translateText = async (text, lang) => {
+      const url = `https://api.mymemory.translated.net/get?q=${text}&langpair=en|${lang}&de=pranavk0217@gmail.com`;
+      const result = await axios.get(url);
+      return result.data.responseData;
+    }
 
     const typing = botResponse?.split('').map((char, index) => (
       <span key={index} style={{ animationDelay: index * 0.03 + 's' }}>{char}</span>
@@ -224,7 +253,7 @@ export default function Home() {
     try {
       const res = await sendChatQuery(text);
       if (res) {
-        console.log("message from the server - botResponse" +res.response);
+        console.log("message from the server - botResponse" + res.response);
         isCalled = false;
         return res.response;
       }
@@ -232,6 +261,7 @@ export default function Home() {
       return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions options given below."
     }
   }
+
 
   function BlobMessage({ message }) {
     return (
@@ -296,29 +326,29 @@ export default function Home() {
           <Sidebar messages={historyMsg ? historyMsg : false} selection={handleSuggestionSubmit} state={historySideBar} setMessages={setMessages} isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
         <div className={`ease-in-out w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
-          <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar}/>
+          <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
           {isOpen && (
             <div className="w-screen h-screen z-40 fixed top-0 right-0 backdrop-blur-2xl flex items-center justify-center">
               <div className="p-10 transition-all ease-in-out bg-white dark:bg-black shadow-2xl rounded-3xl flex flex-col relative items-center justify-center gap-4">
                 {/*<Image src={logo} alt={"oops image not found"} width={50} height={50} />*/}
-                <button className="absolute top-3 right-3" onClick={() => setIsOpen(!isOpen)}><IoCloseCircleOutline size={20}/></button>
+                <button className="absolute top-3 right-3" onClick={() => setIsOpen(!isOpen)}><IoCloseCircleOutline size={20} /></button>
                 <div className="text-center">
                   {congrats ? 'You will be notified when Praveshan begins' : `Do you wish to receive notifications to ${user.email}`}
                 </div>
                 {congrats !== true && (
                   <button className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">
-                  <span
-                    className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                    <span
+                      className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
                     <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
                       <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
                     </span>
                     <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </span>
+                      <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </span>
                     <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white" onClick={() => handleDiscordSend(user)}>Continue</span>
                   </button>
                 )}n
@@ -327,47 +357,50 @@ export default function Home() {
           )}
           <div className="w-full  no-scrollbar text-black  dark:text-white bg-transparent flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
             <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5 pr-8' : 'px-20'} py-6 transition-all ease-in-out duration-300`}>
-                <div className="h-full rounded-3xl flex  flex-col items-center justify-center p-6 gap-5">
-                  <div className="flex mt-96 flex-row">
-                    <Image src={logo} alt={"oops image not found"} width={35} height={35} />
-                    <p className="text-2xl dark:text-white  font-bold text-black px-3">
-                      BLEH
-                    </p>
-                  </div>
-                  <div className="typewriter w-3/4 text-center mb-96">
-                    Seeking reliable healthcare information, immediate assistance, or simply a trusted friend to guide you
-                    on your wellness journey? Look no further – meet HealthAssist Bot,
-                    <span
-                        className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
-                      <Link href="/about">
-                        About.
-                      </Link>
-                    </span>
-                    <div className="mt-8">
-                      <Select
-                          placeholder="Select this"
-                          indicator={<KeyboardArrowDown />}
-                          size="lg"
-                          sx={{
-                            width: 240,
-                            [`& .${selectClasses.indicator}`]: {
-                              transition: '0.2s',
-                              [`&.${selectClasses.expanded}`]: {
-                                transform: 'rotate(-180deg)',
-                              },
-                            },
-                          }}
-                          className="dark:bg-[#121314] dark:text-white mx-auto"
-                      >
-                        <Option value="dog">English</Option>
-                        <Option value="cat">German</Option>
-                        <Option value="fish">French</Option>
-                        <Option value="bird">Russian</Option>
-                      </Select>
+              <div className="h-full rounded-3xl flex  flex-col items-center justify-center p-6 gap-5">
+                <div className="flex mt-96 flex-row">
+                  <Image src={logo} alt={"oops image not found"} width={35} height={35} />
+                  <p className="text-2xl dark:text-white  font-bold text-black px-3">
+                    BLEH
+                  </p>
+                </div>
+                <div className="typewriter w-3/4 text-center mb-96">
+                  Seeking reliable healthcare information, immediate assistance, or simply a trusted friend to guide you
+                  on your wellness journey? Look no further – meet HealthAssist Bot,
+                  <span
+                    className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
+                    <Link href="/about">
+                      About.
+                    </Link>
+                  </span>
+                  <div className="mt-8">
+                    <Select
+                      placeholder="Select this"
+                      indicator={<KeyboardArrowDown />}
+                      size="lg"
+                      sx={{
+                        width: 240,
+                        [`& .${selectClasses.indicator}`]: {
+                          transition: '0.2s',
+                          [`&.${selectClasses.expanded}`]: {
+                            transform: 'rotate(-180deg)',
+                          },
+                        },
+                      }}
+                      className="dark:bg-[#121314] dark:text-white mx-auto"
+                    >
+                      <Option value="en" onClick={() => changeLanguage("en")}>English</Option>
+                      <Option value="de" onClick={() => changeLanguage("de")}>German</Option>
+                      <Option value="fr" onClick={() => changeLanguage("fr")}>French</Option>
+                      <Option value="ru" onClick={() => changeLanguage("ru")}>Russian</Option>
+                      <Option value="ko" onClick={() => changeLanguage("ko")}>Korean</Option>
+                      <Option value="it" onClick={() => changeLanguage("it")}>Italian</Option>
+                      <Option value="ja" onClick={() => changeLanguage("ja")}>Japanese</Option>
+                    </Select>
 
-                    </div>
                   </div>
                 </div>
+              </div>
               {/* CHAT SECTION */}
               {messages.map((MessageComponent, index) =>
                 React.cloneElement(MessageComponent, { key: index })
