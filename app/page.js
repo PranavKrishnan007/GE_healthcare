@@ -11,7 +11,7 @@ import axios from 'axios';
 import Sidebar from '@/components/sidebar'
 import { AiOutlineUser } from 'react-icons/ai'
 import { IoCloseCircleOutline } from 'react-icons/io5'
-import { getSuggestions } from '@/app/admin/page'
+import {getIPAddress, getSuggestions} from '@/app/admin/page'
 import Option from '@mui/joy/Option';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Select, { selectClasses } from '@mui/joy/Select';
@@ -32,15 +32,21 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
-  const [language, setLanguage] = useState("en");
-  const [selectedValue, setSelectedValue] = useState("");
+  const [language, setLanguage] = useState('en');
+  const [selectedValue, setSelectedValue] = useState('');
   const [toggle, setToggle] = useState(false);
+  const [IPAddress, setIPAddress] = useState('');
+
+  useEffect(() => {
+    getIPAddress().then((address ) => setIPAddress(address));
+  }, [])
+
+  // console.log(`http://${IPAddress.address?.ip_address}/`);
 
   useEffect(() => {
     if (chat.current) {
       const lastMessageElement = chat.current.lastElementChild;
-      if (lastMessageElement)
-        lastMessageElement.scrollIntoView({ behavior: "smooth" });
+      if (lastMessageElement) lastMessageElement.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
@@ -49,39 +55,40 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getMessages(user).then((msg) => setHistoryMsg(msg));
+    getMessages(user).then(msg => setHistoryMsg(msg))
     getSuggestions().then((suggestions) => setSuggestionList(suggestions));
-    checkEnrollment(user).then((val) => setCongrats(val));
+    checkEnrollment(user).then(val => setCongrats(val))
   }, [user]);
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
 
+
   async function sendChatQuery(userInput) {
     try {
       // Define the URL with query parameters
-      const url = new URL("/api/prompt", "http://35.229.27.195:4500");
+      const url = new URL("/api/prompt", `http://${IPAddress.address.ip_address}/`);
 
       // Set any query parameters (if needed)
-      url.searchParams.append("prompt", userInput);
+      url.searchParams.append('prompt', 'installation procedure for ipp module');
 
       const response = await fetch(url, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          Accept: "application/json", // Specify the Accept header for JSON response
-        },
+          'Accept': 'application/json' // Specify the Accept header for JSON response
+        }
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       const responseData = await response.json();
-      console.log("Successful Response:", responseData);
+      console.log('Successful Response:', responseData);
       return responseData.data.msg;
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error);
     }
   }
 
@@ -94,21 +101,16 @@ export default function Home() {
     } catch (error) {
       console.error("Error checking document:", error);
     }
-  };
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!message) return;
-    {
-      user &&
-        updateFireMessage(message, user).then(() =>
-          getMessages(user).then((msg) => setHistoryMsg(msg))
-        );
-    }
+    { user && updateFireMessage(message, user).then(() => getMessages(user).then(msg => setHistoryMsg(msg))); }
     addBlobMessage(message);
-    setMessage("");
-  };
+    setMessage('');
+  }
 
   const getMessages = async (user) => {
     try {
@@ -117,9 +119,9 @@ export default function Home() {
       const data = docSnap.data();
       return data.messages; // Accessing messages from the data.
     } catch {
-      console.log("oopsieee");
+      console.log("oopsieee")
     }
-  };
+  }
 
   const updateFireMessage = async (message, user) => {
     const userDocRef = doc(db, "users", user.uid); // Updated line here
@@ -147,31 +149,30 @@ export default function Home() {
 
   const handleSuggestionSubmit = async (suggestion) => {
     await setMessage(suggestion);
-  };
+  }
 
   const addBlobSuggestion = (suggestion) => {
-    setMessages((oldMessages) => [
+    setMessages(oldMessages => [
       ...oldMessages,
       <BlobMessage message={suggestion.suggestion} />,
-      <BotSuggestionMessage message={suggestion.answer} language={language} />,
+      <BotSuggestionMessage message={suggestion.answer} language={language}/>
     ]);
-  };
+  }
 
   const addBlobMessage = (blobText) => {
-    setMessages((oldMessages) => [
+    setMessages(oldMessages => [
       ...oldMessages,
       <BlobMessage message={blobText} />,
-      <BotMessage message={blobText} language={language} />,
+      <BotMessage message={blobText} language={language} />
     ]);
   };
 
-  function BotSuggestionMessage({ message, language }) {
-    // Add language prop
+  function BotSuggestionMessage({ message, language }) { // Add language prop
     const [translatedMessage, setTranslatedMessage] = useState(message);
 
     useEffect(() => {
       const translateText = async () => {
-        if (language !== "en") {
+        if (language !== 'en') {
           const url = `https://api.mymemory.translated.net/get?q=${message}&langpair=en|${language}&de=pranavk0217@gmail.com`;
           const result = await axios.get(url);
           setTranslatedMessage(result.data.responseData.translatedText);
@@ -182,20 +183,13 @@ export default function Home() {
       translateText();
     }, [message, language]); // Add language to the dependency array
 
-    const typing = translatedMessage.split("").map((char, index) => (
-      <span key={index} style={{ animationDelay: index * 0.01 + "s" }}>
-        {char}
-      </span>
+    const typing = translatedMessage.split('').map((char, index) => (
+      <span key={index} style={{ animationDelay: index * 0.01 + 's' }}>{char}</span>
     ));
 
     return (
       <div className="dark:bg-[#131314] mx-auto max-h-min w-5/6  rounded-3xl flex flex-row p-6 gap-5">
-        <Image
-          src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg"
-          alt={"oops image not found"}
-          width={30}
-          height={30}
-        />
+        <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
         <div className="typewriter bg-gray-50 dark:bg-[#252525] dark:shadow-[#070707] dark:shadow-2xl shadow-xl rounded-xl w-full py-8 p-2 px-6">
           {typing}
         </div>
@@ -206,32 +200,21 @@ export default function Home() {
   const changeLanguage = (lang) => {
     console.log(lang);
     setLanguage(lang);
-  };
+  }
 
   let isCalled = false;
 
   function BotMessage({ message, language }) {
-    const [botResponse, setBotResponse] = useState("");
+    const [botResponse, setBotResponse] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
       const fetchBotResponse = async () => {
-        let response = await BotResponse(message).then(async (res) => {
-          if (language !== "en") {
-            console.log(res, language);
-            const translation = await translateText(res, language);
-            const resp = translation;
-            console.log(resp);
-            return resp;
-
-          }
-          else{
-            return res;
-          }
-
-        });
-        console.log(response);
-
+        let response = await BotResponse(message);
+        if (language !== 'en') {
+          const translation = await translateText(response, language);
+          response = translation.data.translatedText;
+        }
         setBotResponse(response);
         setIsLoading(false);
       };
@@ -239,42 +222,28 @@ export default function Home() {
     }, [message, language]);
 
     const translateText = async (text, lang) => {
-      try {
-        const url = `https://api.mymemory.translated.net/get?q=${text}&langpair=en|${lang}`;
-        const response = await axios.get(url);
-        const translation = response.data.responseData.translatedText;
-        console.log(translation);
-        return translation;
-      } catch (error) {
-        console.error(error);
-        return text; // Return the original text if translation fails
-      }
-    };
+      const url = `https://api.mymemory.translated.net/get?q=${text}&langpair=en|${lang}&de=pranavk0217@gmail.com`;
+      const result = await axios.get(url);
+      return result.data.responseData;
+    }
 
-    const typing = botResponse?.split("").map((char, index) => (
-      <span key={index} style={{ animationDelay: index * 0.03 + "s" }}>
-        {char}
-      </span>
+    const typing = botResponse?.split('').map((char, index) => (
+      <span key={index} style={{ animationDelay: index * 0.03 + 's' }}>{char}</span>
     ));
 
     return (
       <div className="dark:bg-[#131314] mx-auto max-h-min flex w-5/6 flex-row p-6 gap-5">
-        <Image
-          src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg"
-          alt={"oops image not found"}
-          width={30}
-          height={30}
-        />
+        <Image src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Bard_logo.svg" alt={"oops image not found"} width={30} height={30} />
         <div className="typewriter bg-gray-50 shadow-xl dark:bg-[#252525] dark:shadow-[#070707] dark:shadow-2xl  rounded-xl w-full py-8 p-2 px-6">
-          {isLoading ? (
+          {isLoading ?
             <div className="bouncing-loader">
               <div></div>
               <div></div>
               <div></div>
             </div>
-          ) : (
+            :
             typing
-          )}
+          }
         </div>
       </div>
     );
@@ -294,7 +263,7 @@ export default function Home() {
         return res.response;
       }
     } catch (error) {
-      return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions options given below.";
+      return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions options given below."
     }
   }
 
@@ -302,19 +271,7 @@ export default function Home() {
   function BlobMessage({ message }) {
     return (
       <div className="bg-transparent mx-auto w-5/6 mt-52 max-h-min  flex flex-row  px-6 gap-2">
-        {user ? (
-          <Image
-            src={user.photoURL}
-            alt={"oops image not found"}
-            width={40}
-            height={35}
-            className="rounded-full"
-          />
-        ) : (
-          <span className="font-extrabold border-2 p-3 align-baseline rounded-full">
-            <AiOutlineUser className="" />
-          </span>
-        )}
+        {user ? <Image src={user.photoURL} alt={"oops image not found"} width={40} height={35} className="rounded-full" /> : <span className="font-extrabold border-2 p-3 align-baseline rounded-full"><AiOutlineUser className="" /></span>}
         <span className="border border-gray-400/50 dark:bg-[#252525] border-[#DCC3F9] w-full py-2 px-6 dark:border-white/70 rounded-xl align-baseline">
           {message}
         </span>
@@ -328,35 +285,33 @@ export default function Home() {
       await updateDoc(userDocRef, {
         registered: true,
         name: user.displayName,
-        email: user.email,
+        email: user.email
       });
     } catch (error) {
       console.error("Error updating document:", error);
     }
     setCongrats(true);
     setIsOpen(!isOpen);
-  };
+  }
+
 
   const handleDiscordSend = async (user) => {
-    fetch(
-      "https://discord.com/api/webhooks/1138864626503794688/hYE8ORxSxCca51Lej_cdFwjvwEF8-8a8uoHkQMMEopcuTAQlFd8ZBnfd7Ec32DUwGgV_",
-      {
-        body: JSON.stringify({
-          content: `Enrollment Details : Name - ${user.displayName}, Email - ${user.email}`,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }
-    )
+    fetch("https://discord.com/api/webhooks/1138864626503794688/hYE8ORxSxCca51Lej_cdFwjvwEF8-8a8uoHkQMMEopcuTAQlFd8ZBnfd7Ec32DUwGgV_", {
+      body: JSON.stringify({
+        content: `Enrollment Details : Name - ${user.displayName}, Email - ${user.email}`,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
       .then(function (res) {
-        registryComplete(user);
+        registryComplete(user)
       })
       .catch(function (res) {
         console.log(res);
       });
-  };
+  }
 
   return (
     <div className="bg-white dark:bg-[#121314] dark:text-white h-screen w-full  overflow-hidden flex no-scrollbar flex-col">
@@ -368,97 +323,45 @@ export default function Home() {
       {/*  </button>*/}
       {/*</div>*/}
       <Preloader />
-      <div></div>
+      <div>
+
+      </div>
       <div className="flex flex-row dark:bg-[#121314] flex-grow h-full no-scrollbar pt-2 text-white">
-        <div
-          className={`dark:text-white dark:shadow-[#000000] shadow-2xl shadow-[#D6C7E7]  text-white transition-all  duration-300 no-scrollbar ease-in-out ${
-            historySideBar ? "w-3/12 z-20" : "w-0"
-          }`}
-        >
-          <Sidebar
-            messages={historyMsg ? historyMsg : false}
-            selection={handleSuggestionSubmit}
-            state={historySideBar}
-            setMessages={setMessages}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-          />
+        <div className={`dark:text-white dark:shadow-[#000000] shadow-2xl shadow-[#D6C7E7]  text-white transition-all  duration-300 no-scrollbar ease-in-out ${historySideBar ? 'w-3/12 z-20' : 'w-0'}`}>
+          <Sidebar messages={historyMsg ? historyMsg : false} selection={handleSuggestionSubmit} state={historySideBar} setMessages={setMessages} isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
-        <div
-          className={`ease-in-out w-full p-2 no-scrollbar flex-grow overflow-hidden ${
-            historySideBar ? "pr-12" : "pr-16"
-          } transition-all ${historySideBar ? "pl-10" : "pl-16"} `}
-        >
+        <div className={`ease-in-out w-full p-2 no-scrollbar flex-grow overflow-hidden ${historySideBar ? 'pr-12' : 'pr-16'} transition-all ${historySideBar ? 'pl-10' : 'pl-16'} `}>
           <TopBar setSidebar={setHistorySideBar} sideBar={historySideBar} />
           {isOpen && (
             <div className="w-screen h-screen z-40 fixed top-0 right-0 backdrop-blur-2xl flex items-center justify-center">
               <div className="p-10 transition-all ease-in-out bg-white dark:bg-black shadow-2xl rounded-3xl flex flex-col relative items-center justify-center gap-4">
                 {/*<Image src={logo} alt={"oops image not found"} width={50} height={50} />*/}
-                <button
-                  className="absolute top-3 right-3"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <IoCloseCircleOutline size={20} />
-                </button>
+                <button className="absolute top-3 right-3" onClick={() => setIsOpen(!isOpen)}><IoCloseCircleOutline size={20} /></button>
                 <div className="text-center">
-                  {congrats
-                    ? "You will be notified when Praveshan begins"
-                    : `Do you wish to receive notifications to ${user.email}`}
+                  {congrats ? 'You will be notified when Praveshan begins' : `Do you wish to receive notifications to ${user.email}`}
                 </div>
                 {congrats !== true && (
                   <button className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold text-indigo-600 transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-gray-50 group">
-                    <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
+                    <span
+                      className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-indigo-600 group-hover:h-full"></span>
                     <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
-                      <svg
-                        className="w-5 h-5 text-green-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
+                      <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
                     </span>
                     <span className="absolute left-0 pl-2.5 -translate-x-12 group-hover:translate-x-0 ease-out duration-200">
-                      <svg
-                        className="w-5 h-5 text-green-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
+                      <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
                     </span>
-                    <span
-                      className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white"
-                      onClick={() => handleDiscordSend(user)}
-                    >
-                      Continue
-                    </span>
+                    <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-white" onClick={() => handleDiscordSend(user)}>Continue</span>
                   </button>
-                )}
-                n
+                )}n
               </div>
             </div>
           )}
           <div className="w-full  no-scrollbar text-black  dark:text-white bg-transparent flex flex-col h-[calc(100vh-5rem)] overflow-hidden">
-            <div
-              ref={chat}
-              className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${
-                historySideBar ? "pl-5 pr-8" : "px-20"
-              } py-6 transition-all ease-in-out duration-300`}
-            >
+            <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5 pr-8' : 'px-20'} py-6 transition-all ease-in-out duration-300`}>
               <div className="h-full rounded-3xl flex  flex-col items-center justify-center p-6 gap-5">
                 <div className="flex mt-96 flex-row">
                   <Image src={logo} alt={"oops image not found"} width={65} />
@@ -467,11 +370,13 @@ export default function Home() {
                   {/*</p>*/}
                 </div>
                 <div className="typewriter w-3/4 text-center mb-96">
-                  Seeking reliable healthcare information, immediate assistance,
-                  or simply a trusted friend to guide you on your wellness
-                  journey? Look no further – meet HealthAssist Bot,
-                  <span className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
-                    <Link href="/about">About.</Link>
+                  Seeking reliable healthcare information, immediate assistance, or simply a trusted friend to guide you
+                  on your wellness journey? Look no further – meet HealthAssist Bot,
+                  <span
+                    className="pl-2  hover:cursor-pointer font-bold text-indigo-700  dark:text-cyan-200 underline">
+                    <Link href="/about">
+                      About.
+                    </Link>
                   </span>
                   <div className="mt-8">
                     <Select
@@ -481,36 +386,23 @@ export default function Home() {
                       sx={{
                         width: 240,
                         [`& .${selectClasses.indicator}`]: {
-                          transition: "0.2s",
+                          transition: '0.2s',
                           [`&.${selectClasses.expanded}`]: {
-                            transform: "rotate(-180deg)",
+                            transform: 'rotate(-180deg)',
                           },
                         },
                       }}
                       className="dark:bg-[#121314] dark:text-white mx-auto"
                     >
-                      <Option value="en" onClick={() => changeLanguage("en")}>
-                        English
-                      </Option>
-                      <Option value="de" onClick={() => changeLanguage("de")}>
-                        German
-                      </Option>
-                      <Option value="fr" onClick={() => changeLanguage("fr")}>
-                        French
-                      </Option>
-                      <Option value="ru" onClick={() => changeLanguage("ru")}>
-                        Russian
-                      </Option>
-                      <Option value="ko" onClick={() => changeLanguage("ko")}>
-                        Korean
-                      </Option>
-                      <Option value="it" onClick={() => changeLanguage("it")}>
-                        Italian
-                      </Option>
-                      <Option value="ja" onClick={() => changeLanguage("ja")}>
-                        Japanese
-                      </Option>
+                      <Option value="en" onClick={() => changeLanguage("en")}>English</Option>
+                      <Option value="de" onClick={() => changeLanguage("de")}>German</Option>
+                      <Option value="fr" onClick={() => changeLanguage("fr")}>French</Option>
+                      <Option value="ru" onClick={() => changeLanguage("ru")}>Russian</Option>
+                      <Option value="ko" onClick={() => changeLanguage("ko")}>Korean</Option>
+                      <Option value="it" onClick={() => changeLanguage("it")}>Italian</Option>
+                      <Option value="ja" onClick={() => changeLanguage("ja")}>Japanese</Option>
                     </Select>
+
                   </div>
                 </div>
               </div>
@@ -520,11 +412,7 @@ export default function Home() {
               )}
             </div>
             <div className="flex items-center mx-auto w-2/3 justify-center pb-6 flex-col">
-              <div
-                className={`carousel-container custom-scrollbar ${
-                  historySideBar ? "pl-5 pr-8" : "px-20"
-                } transition-all pb-3 ease-in-out duration-300`}
-              >
+              <div className={`carousel-container custom-scrollbar ${historySideBar ? 'pl-5 pr-8' : 'px-20'} transition-all pb-3 ease-in-out duration-300`}>
                 <div className="carousel custom-scrollbar" ref={carouselRef}>
                   {suggestionList?.suggestions?.map((suggestion, index) => (
                     <button
@@ -537,10 +425,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <form
-                className="w-full flex flex-row items-center justify-center gap-6"
-                onSubmit={handleSubmit}
-              >
+              <form className="w-full flex flex-row items-center justify-center gap-6" onSubmit={handleSubmit}>
                 <input
                   type="text"
                   className="w-full outline-none border border-gray-400/50 dark:border-white/70 px-10 py-2 dark:bg-[#121314] rounded-full text-md dark:text-white dark:placeholder:text-white/90 focus:border-blue-300 hover:border-white"
@@ -548,10 +433,7 @@ export default function Home() {
                   value={message}
                   onChange={handleMessageChange}
                 />
-                <button
-                  type="submit"
-                  className="text-lg px-12 rounded-full text-white bg-gradient-to-b from-indigo-500 via-indigo-600 to-blue-700 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium  py-2 text-center mr-2 mb-2 "
-                >
+                <button type="submit" className="text-lg px-12 rounded-full text-white bg-gradient-to-b from-indigo-500 via-indigo-600 to-blue-700 hover:bg-gradient-to-br shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium  py-2 text-center mr-2 mb-2 ">
                   Submit
                 </button>
               </form>
@@ -560,5 +442,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -24,7 +24,7 @@ export const getIPAddress = async () => {
   try {
     const docRef = doc(db, "ip", "address");
     const docSnap = await getDoc(docRef);
-    console.log(docSnap.data(), "from firebase");
+    // console.log(docSnap.data(), "from firebase");
     return docSnap.data() ; // Provide a default if data is undefined
   } catch (error) {
     console.log("Error getting suggestions: ", error);
