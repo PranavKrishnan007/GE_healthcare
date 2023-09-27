@@ -364,10 +364,10 @@ export default function Home() {
             <div ref={chat} className={`rounded-3xl flex-grow custom-scrollbar overflow-y-auto ${historySideBar ? 'pl-5 pr-8' : 'px-20'} py-6 transition-all ease-in-out duration-300`}>
               <div className="h-full rounded-3xl flex  flex-col items-center justify-center p-6 gap-5">
                 <div className="flex mt-96 flex-row">
-                  <Image src={logo} alt={"oops image not found"} width={65} />
-                  {/*<p className="text-2xl dark:text-white  font-bold text-black px-3">*/}
-                  {/*  bleh.*/}
-                  {/*</p>*/}
+                  {/*<Image src={logo} alt={"oops image not found"} width={65} />*/}
+                  <p className="text-2xl dark:text-white  font-bold text-black px-3">
+                    bleh.
+                  </p>
                 </div>
                 <div className="typewriter w-3/4 text-center mb-96">
                   Seeking reliable healthcare information, immediate assistance, or simply a trusted friend to guide you
@@ -380,7 +380,7 @@ export default function Home() {
                   </span>
                   <div className="mt-8">
                     <Select
-                      placeholder="Select this"
+                      placeholder="Select Language"
                       indicator={<KeyboardArrowDown />}
                       size="lg"
                       sx={{
@@ -392,7 +392,7 @@ export default function Home() {
                           },
                         },
                       }}
-                      className="dark:bg-[#121314] dark:text-white mx-auto"
+                      className="dark:bg-[#121314] dark:hover:bg-[#121314] dark:text-white mx-auto "
                     >
                       <Option value="en" onClick={() => changeLanguage("en")}>English</Option>
                       <Option value="de" onClick={() => changeLanguage("de")}>German</Option>

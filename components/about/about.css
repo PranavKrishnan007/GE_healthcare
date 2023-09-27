@@ -270,7 +270,7 @@
 .one-div::before {
     pointer-events: none;
     /* no. */
-    content: '\A      ⠑⠭⠏⠇⠕⠗⠑\A      G E N E R A T I V E  \A  BOT  \A \A\A   ⠗ bleh';
+    content: '\A      ⠑⠭⠏⠇⠕⠗⠑\A  G E N E R A T I V E  \A  BOT  \A \A\A   ⠗ bleh';
     white-space: pre-wrap;
     padding: 20px;
     background: rgba(58, 58, 58, 0.39);
