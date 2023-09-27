@@ -53,11 +53,11 @@ const AboutPage = () => {
                             <div className=" flex lg:flex-row flex-col p-8 items-center h-[600px]">
                                 <div className="w-full mt-32 h-full">
                                     <div
-                                        className="flex-initial text-left font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center mt-16 text-3xl  lg:text-7xl  py-4">
+                                        className="flex-initial text-center lg:text-left font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center mt-16 text-3xl  lg:text-7xl  py-4">
                                         Welcome to Your Intelligent Healthcare Documentation Companion!
                                     </div>
-                                    <div className="rounded-md text-center  ">
-                                        <button className="flex text-gray-500 text-left h-full active:text-cyan-500">
+                                    <div className="rounded-md mx-auto ">
+                                        <button className="flex text-gray-500 text-center mx-auto lg:mx-0 lg:text-left h-full active:text-cyan-500">
                                             <span className="Btn">
                                                  <span className="svgContainer">
                                                    <svg fill="white" viewBox="0 0 496 512" height="1.6em"><path
@@ -71,7 +71,7 @@ const AboutPage = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="w-1/3 mt-40 font-mono tracking-wide  text-left flex flex-row-reverse  h-full">
+                                <div className="w-1/3 mt-40 font-mono tracking-wide  invisible  lg:visible text-left flex flex-row-reverse  h-full">
                                     <div className=" px-4 ">
                                         <div>
                                             Navigating the vast world of GE Healthcare's documentation has never been
@@ -112,10 +112,10 @@ const AboutPage = () => {
                 <div className="flex items-center justify-center pr-4  bg-stone-900   min-h-[800px] w-full">
                     <div className="w-full flex px-12 lg:flex-row flex-col p-8 items-center min-h-[600px]">
                         <div className="flex flex-col  items-center justify-center w-full  h-full">
-                            <div className="one-div"></div>
+                            <div className="one-div mt-24"></div>
                         </div>
                         <div className="w-4/5 flex-col text-left px-2 mx-auto text-xl text-white tracking-wide items-center h-full">
-                            <p className="text-white/50 mb-16 font-mono">
+                            <p className="text-white/50 my-16 font-mono">
                                 Software Layers
                             </p>
                             <p className="my-12 font-mono">
@@ -148,8 +148,8 @@ const AboutPage = () => {
                 </div>
                 <div>
                     <div className="h-fit  bg-white flex flex-col">
-                        <div className="px-8 border-t border-t-gray-300  flex-grow">
-                            <div className="flex  py-16 lg:flex-row flex-col border-r p-4 border-gray-300 h-full">
+                        <div className="px-8 border-t  border-t-gray-300  flex-grow">
+                            <div className="flex  py-64 lg:flex-row flex-col border-r p-4 border-gray-300 h-full">
                                 <div className="w-full h-full p-4">
                                     <div className="flex-initial px-1 text-center text-6xl py-4 font-bold">
                                         <div className="p-4 font-['Roboto'] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center my-16">
@@ -179,7 +179,7 @@ const AboutPage = () => {
                         <div className="border-t border-b h-14 text-center px-14 my-auto py-4 border-gray-300">
                             <div className="bar overflow-clip font-bold text-xl">
                                 <div id="scroll-container ">
-                                    <div id="scroll-text" className="bar_content w-fit overflow-clip font-mono text-clip">
+                                    <div id="scroll-text" className="bar_content min-w-max overflow-clip  font-mono text-clip">
                                         <span className="px-24">
                                             Scalable
                                         </span>
@@ -203,7 +203,7 @@ const AboutPage = () => {
                 </div>
 
                 <div className="scroll-snap">
-                    <div className=" min-h-screen py-10 w-full bg-stone-900">
+                    <div className=" min-h-screen pb-32 w-full bg-stone-900">
                         <div className="flex flex-row px-12 py-4">
                             <div className="flex-initial px-1 text-3xl my-auto font-bold text-white">
                                 B.
@@ -240,58 +240,58 @@ const AboutPage = () => {
                         </div>
                     </div>
                 </div>
-                <div id="How_to_use" className="px-8 border-t border-t-gray-300  flex-grow">
-                    <div className="flex  py-16 lg:flex-row flex-col border-r p-4 border-gray-300 h-full">
-                        <div className="w-full h-full p-4">
-                            <div className="flex-initial px-1 text-center text-6xl py-4 font-bold">
-                                <div className="p-4 font-['Roboto'] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center my-16">
-                                    How to use?
-                                </div>
-                                <div></div>
-                                <Image src={img_light} alt={"oops image not found"}
-                                       className="w-[90%] mx-auto shadow-xl rounded-2xl hover:scale-105 transition-all duration-1000 ease-in-out"/>
-                            </div>
-                            <div className="flex-auto rounded-md text-center p-2 mx-2">
-                                <p className="text-black font-mono text-black/70  h-full">
-                                    A clean and bright interface for a refreshing chat experience
-                                </p>
-                            </div>
-                        </div>
-                        <div className="w-full h-full p-4">
-                            <div className="flex-auto rounded-md mt-4 text-center p-2 mx-2">
-                                <div className="w-4/5 flex-col text-left px-2 mx-auto text-xl text-black tracking-wide items-center h-full">
-                                    <p className="text-white/50 mb-16 font-mono">
-                                        Software Layers
-                                    </p>
-                                    <p className="my-12 font-mono">
-                                <span className="font-extrabold font-mono pr-2">
-                                    Frontend:
-                                </span>
-                                        We use Next.js for an interactive, fast, and modern user interface.
-                                    </p>
-                                    <p className="my-12 font-mono">
-                                 <span className="font-extrabold font-mono pr-2">
-                                    API:
-                                </span>
-                                        FastAPI ensures rapid, secure communication between you and the chatbot.
-                                    </p>
-                                    <p className="my-12 font-mono">
-                                 <span className="font-extrabold font-mono pr-2">
-                                    ML model:
-                                </span>
-                                        it’s based on a variant of Llama 2, understands your conversation context for more accurate responses.
-                                    </p>
-                                    <p className="my-12 font-mono">
-                                 <span className="font-extrabold font-mono pr-2">
-                                    Chat History Preserved:
-                                </span>
-                                        Your chat history is securely stored in Firebase, ready for easy access whenever you need it.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {/*<div id="How_to_use" className="px-8 border-t border-t-gray-300  flex-grow">*/}
+                {/*    <div className="flex  py-16 lg:flex-row flex-col border-r p-4 border-gray-300 h-full">*/}
+                {/*        <div className="w-full h-full p-4">*/}
+                {/*            <div className="flex-initial px-1 text-center text-6xl py-4 font-bold">*/}
+                {/*                <div className="p-4 font-['Roboto'] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 items-center my-16">*/}
+                {/*                    How to use?*/}
+                {/*                </div>*/}
+                {/*                <div></div>*/}
+                {/*                <Image src={img_light} alt={"oops image not found"}*/}
+                {/*                       className="w-[90%] mx-auto shadow-xl rounded-2xl hover:scale-105 transition-all duration-1000 ease-in-out"/>*/}
+                {/*            </div>*/}
+                {/*            <div className="flex-auto rounded-md text-center p-2 mx-2">*/}
+                {/*                <p className="text-black font-mono text-black/70  h-full">*/}
+                {/*                    A clean and bright interface for a refreshing chat experience*/}
+                {/*                </p>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*        <div className="w-full h-full p-4">*/}
+                {/*            <div className="flex-auto rounded-md mt-4 text-center p-2 mx-2">*/}
+                {/*                <div className="w-4/5 flex-col text-left px-2 mx-auto text-xl text-black tracking-wide items-center h-full">*/}
+                {/*                    <p className="text-white/50 mb-16 font-mono">*/}
+                {/*                        Software Layers*/}
+                {/*                    </p>*/}
+                {/*                    <p className="my-12 font-mono">*/}
+                {/*                <span className="font-extrabold font-mono pr-2">*/}
+                {/*                    Frontend:*/}
+                {/*                </span>*/}
+                {/*                        We use Next.js for an interactive, fast, and modern user interface.*/}
+                {/*                    </p>*/}
+                {/*                    <p className="my-12 font-mono">*/}
+                {/*                 <span className="font-extrabold font-mono pr-2">*/}
+                {/*                    API:*/}
+                {/*                </span>*/}
+                {/*                        FastAPI ensures rapid, secure communication between you and the chatbot.*/}
+                {/*                    </p>*/}
+                {/*                    <p className="my-12 font-mono">*/}
+                {/*                 <span className="font-extrabold font-mono pr-2">*/}
+                {/*                    ML model:*/}
+                {/*                </span>*/}
+                {/*                        it’s based on a variant of Llama 2, understands your conversation context for more accurate responses.*/}
+                {/*                    </p>*/}
+                {/*                    <p className="my-12 font-mono">*/}
+                {/*                 <span className="font-extrabold font-mono pr-2">*/}
+                {/*                    Chat History Preserved:*/}
+                {/*                </span>*/}
+                {/*                        Your chat history is securely stored in Firebase, ready for easy access whenever you need it.*/}
+                {/*                    </p>*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </section>
         </div>
     )

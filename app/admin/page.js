@@ -7,6 +7,8 @@ import {ref, uploadBytes} from "firebase/storage";
 import TopBar from '@/components/topbar/topbar'
 import axios from "axios";
 import {AiOutlineCheckCircle, AiOutlineCloudUpload, AiOutlineFileAdd,} from "react-icons/ai";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export const getSuggestions = async () => {
@@ -41,10 +43,17 @@ const Admin = () => {
   const [fileSelected, setFileSelected] = useState(false);
   const [fileName, setFileName] = useState('');
   const [file, setFile] = useState(null);
-
   const [suggestion, setSuggestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [IPAddress, setIPAddress] = useState('');
+  const notify = () => toast("Wow so easy!");
+  const setup_model = () => toast("Request to setup the model has been sent!");
+  const setup_model_error = () => toast("Request to setup the model has been sent!");
+  const health_check = () => toast("Request to check health the model has been sent!");
+  const health_check_error = () => toast("There was an error in health the model.");
+  const shutdown = () => toast("Request to shutdown the model has been sent!");
+  const shutdown_error = () => toast("There was an error in shutting down the model.");
+
 
   useEffect(() => {
     getSuggestions().then((suggestions) => setSuggestionList(suggestions));
@@ -337,15 +346,25 @@ const Admin = () => {
                         await axios.get(
                           `http://${IPAddress.address.ip_address}/api/setup_model`
                         );
-                        alert("Request to start the model has been sent!");
+                        // alert("Request to setup the model has been sent!");
+                        setup_model()
                       } catch (error) {
                         console.error("Error:", error);
-                        alert("There was an error in starting the model.");
+                        // alert("There was an error in starting the model.");
+                        setup_model_error()
                       }
                     }}
                   >
                     Start the Model
                   </button>
+                  <ToastContainer />
+                  {/*<button*/}
+                  {/*    className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg border-green-600   border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"*/}
+                  {/*    onClick={notify}*/}
+                  {/*>*/}
+                  {/*  toast*/}
+                  {/*</button>*/}
+                  {/*<ToastContainer />*/}
                   <button
                       className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg border-green-600  border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                     onClick={async () => {
@@ -353,11 +372,13 @@ const Admin = () => {
                          const response = await axios.get(
                           `http://${IPAddress.address.ip_address}/api/heath_check`  //we dont fking care about the http
                         );
-                        alert("Request to check health the model has been sent!");
+                        // alert("Request to check health the model has been sent!");
                         console("Health check response: " + response.data);
+                        health_check()
                       } catch (error) {
                         console.error("Error:", error);
-                        alert("There was an error in health the model.");
+                        // alert("There was an error in health the model.");
+                        health_check_error()
                       }
                     }}
                   >
@@ -370,10 +391,12 @@ const Admin = () => {
                         await axios.get(
                             `http://${IPAddress.address.ip_address}/api/shutdown`
                         );
-                        alert("Request to shutdown the model has been sent!");
+                        // alert("Request to shutdown the model has been sent!");
+                        shutdown()
                       } catch (error) {
                         console.error("Error:", error);
-                        alert("There was an error in shutting down the model.");
+                        // alert("There was an error in shutting down the model.");
+                        shutdown_error()
                       }
                     }}
                   >
