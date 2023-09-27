@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useState } from 'react'
-import { db, storage } from '@/app/firebase'
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
-import { ref, uploadBytes } from "firebase/storage";
+import {useEffect, useState} from 'react'
+import {db, storage} from '@/app/firebase'
+import {arrayUnion, doc, getDoc, setDoc, updateDoc} from 'firebase/firestore'
+import {ref, uploadBytes} from "firebase/storage";
 import TopBar from '@/components/topbar/topbar'
 import axios from "axios";
-import {
-  AiOutlineCloudUpload,
-  AiOutlineFileAdd,
-  AiOutlineShoppingCart,
-  AiOutlineCheckCircle,
-} from "react-icons/ai";
+import {AiOutlineCheckCircle, AiOutlineCloudUpload, AiOutlineFileAdd,} from "react-icons/ai";
 
 
 export const getSuggestions = async () => {
@@ -25,6 +20,18 @@ export const getSuggestions = async () => {
     return { suggestions: [] }; // Handle the error and provide a default value
   }
 }
+export const getIPAddress = async () => {
+  try {
+    const docRef = doc(db, "ip", "address");
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap.data(), "from firebase");
+    return docSnap.data() ; // Provide a default if data is undefined
+  } catch (error) {
+    console.log("Error getting suggestions: ", error);
+    // Handle the error and provide a default value
+  }
+}
+
 
 const Admin = () => {
   const [authorised, setAuthorised] = useState(false);
@@ -37,9 +44,14 @@ const Admin = () => {
 
   const [suggestion, setSuggestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [IPAddress, setIPAddress] = useState('');
 
   useEffect(() => {
     getSuggestions().then((suggestions) => setSuggestionList(suggestions));
+  }, [])
+
+  useEffect(() => {
+    getIPAddress().then((address ) => setIPAddress(address));
   }, [])
 
   const handleSuggestionRemoval = async (index) => {
@@ -83,6 +95,32 @@ const Admin = () => {
     }
   }
 
+
+  const handleIP = async (IPAddress) => {
+    const docRef = doc(db, "ip", "address");
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        try {
+          await updateDoc(docRef, {
+            "address": { ip_address: IPAddress }
+          });
+        } catch {
+          console.log("error");
+        }
+      } else {
+        try {
+          await setDoc(docRef, { address: { ip_address: IPAddress}});
+        } catch (error) {
+          console.log("error");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(IPAddress);
+  }
+
   const handleUsernameChange = (event) => {
     setUserName(event.target.value);
   };
@@ -109,6 +147,10 @@ const Admin = () => {
 
   const handleAnswerChange = (e) => {
     setAnswer(e.target.value);
+  }
+
+  const handleIPChange = (e) => {
+    setIPAddress(e.target.value);
   }
 
   const handleFileChange = (event) => {
@@ -138,18 +180,19 @@ const Admin = () => {
     }
   };
   return (
-    <div className="min-h-screen  dark:bg-[#121314]">
+    <div className="min-h-screen  dark:text-white dark:bg-[#121314]">
       <div className="px-12">
         <TopBar admin={true} />
       </div>
       <div className="bg-transparent ">
         <div className="container mx-auto flex flex-col p-8 justify-center items-center ">
-          <h1 className="text-3xl font-medium text-center dark:text-gray-100 pb-16">
+          <h1 className={`text-4xl ${ !authorised ? "" : "border-b border-gray-300" } font-sans   w-full font-bold text-black dark:text-white text-center pb-16`}>
             Admin Page
           </h1>
           {authorised ? (
-            <div className="p-2 bg-transparent transition-all ease-in-out rounded shadow-sm w-full  ">
-              <div className="flex justify-center py-5">
+             <div className="w-full">
+            <div className="px-2 justify-center bg-transparent transition-all ease-in-out rounded border-b border-gray-300 shadow-sm w-full flex gap-6 ">
+              <div className="text-center justify-center py-5 border-r px-6 border-gray-300">
                 <form onSubmit={handleUploadSubmit}>
                   <div className="upload-card">
                     <div className="upload-card-header">
@@ -176,74 +219,123 @@ const Admin = () => {
                     </button>
                   </div>
                 </form>
-              </div>
-              <div className="text-center w-full text-xl py-5">
-                Suggestions Prompts
-              </div>
-              {suggestionList?.suggestions?.map((suggestion, index) => (
-                <div>
-                  <div
-                    key={index}
-                    className="flex  flex-row w-full justify-between mb-5"
-                  >
-                    <div className="flex flex-row space-x-4">
-                      <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded">
-                        {suggestion.suggestion}
-                      </div>
-                      <div className="p-2 bg-gray-200 dark:bg-gray-700 rounded">
-                        {suggestion.answer}
-                      </div>
-                    </div>
-                    <div>
-                      <button
-                        className="bg-red-500 text-white rounded-full px-4 py-2"
-                        onClick={() => handleSuggestionRemoval(index)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  </div>
+                <div className="mt-8 font-mono">
+                  Upload your pdf here
                 </div>
-              ))}
-              <div className="flex flex-col w-full gap-y-4">
-                <input
-                  type="text"
-                  placeholder="Question"
-                  className="dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded p-2 mb-2 w-full"
-                  value={suggestion}
-                  onChange={(e) => handleSuggestionChange(e)}
-                />
-                <input
-                  type="text"
-                  placeholder="Answer"
-                  className="dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded p-2 mb-2 w-full"
-                  value={answer}
-                  onChange={(e) => handleAnswerChange(e)}
-                />
-              </div>
-              <div className="flex flex-row py-5 justify-center overflow-hidden">
+
+                <div className="input-css mt-12">
+                  <input
+                      type="text"
+                      placeholder="Ip Address"
+                      className="input input-alt dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded ps-2  w-full"
+                      value={IPAddress.address?.ip_address}
+                      onChange={(e) => handleIPChange(e)}
+                  />
+                  <span className="input-border input-border-alt"></span>
+                </div>
+                <div className="mt-8 max-w-[400px] mb-4 font-mono">
+                  endpoint:
+                  <p>
+                    { IPAddress && `http://${IPAddress.address.ip_address}/`}
+                  </p>
+                </div>
                 <button
-                  className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-indigo-600 text-indigo-600 "
-                  onClick={() => handleAddSuggestionClick(suggestion, answer)}
+                    className="cursor-pointer transition-all bg-blue-500 text-white px-6 py-2 rounded-lg border-blue-600   border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]  active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+                    onClick={() => handleIP(IPAddress)}
                 >
-                  <span class="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-indigo-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-                  <span class="relative text-indigo-600 transition duration-300 group-hover:text-white ease">
-                    Add Suggestion
+                  <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-indigo-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
+                  <span className="relative transition duration-300 group-hover:text-white ease">
+                    Add
                   </span>
                 </button>
+
               </div>
-              <div className="flex flex-col items-center justify-center">
+              <div className="w-full font-mono">
+                <div className="text-center w-full text-xl py-5">
+                  Suggestions Prompts
+                </div>
+                <div className="flex flex-col w-full gap-y-4">
+                  <div className="input-css">
+                    <input
+                        type="text"
+                        placeholder="Question"
+                        className="input input-alt dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded p-2 "
+                        value={suggestion}
+                        onChange={(e) => handleSuggestionChange(e)}
+                    />
+                    <span className="input-border input-border-alt"></span>
+                  </div>
+
+                  <div className="input-css">
+                    <input
+                        type="text"
+                        placeholder="Answer"
+                        className="input input-alt dark:bg-gray-800 dark:text-white border-2 border-gray-300 rounded ps-2 "
+                        value={answer}
+                        onChange={(e) => handleAnswerChange(e)}
+                    />
+                    <span className="input-border input-border-alt"></span>
+                  </div>
+
+                </div >
+                <div className="flex flex-row py-5 border-b border-gray-300 justify-center overflow-hidden">
+                  <button
+                      className="cursor-pointer transition-all bg-blue-500 text-white px-6 py-2 rounded-lg border-blue-600   border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]  active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+                      onClick={() => handleAddSuggestionClick(suggestion, answer)}
+                  >
+                    <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-indigo-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
+                    <span className="relative transition duration-300 group-hover:text-white ease">
+                    Add Suggestion
+                  </span>
+                  </button>
+                </div>
+
+
+                <div className="overflow-y-scroll px-2 mt-6 max-h-[800px]">
+                  {suggestionList?.suggestions?.map((suggestion, index) => (
+                      <div>
+                        <div
+                            key={index}
+                            className="flex  flex-row w-full justify-between mb-10"
+                        >
+                          <div className="flex flex-col">
+                            <div className="p-2 my-2 w-[98%] bg-gray-200 dark:bg-gray-700  rounded">
+                              {suggestion.suggestion}
+                            </div>
+                            <div className="p-2 bg-gray-200 w-[98%] dark:bg-gray-700 rounded">
+                              {suggestion.answer}
+                            </div>
+                          </div>
+                          <div>
+                            <button
+                                className="ml-2 cursor-pointer transition-all bg-red-500 text-white px-6 py-2 rounded-lg border-red-600   border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
+                                onClick={() => handleSuggestionRemoval(index)}
+                            >
+                              remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                  ))}
+                </div>
+
+
+              </div>
+            </div>
+
+
+              <div className="flex flex-col my-20 items-center justify-center">
                 <div className="text-red-500 text-xl text-center py-2">
                   {" "}
                   Danger zone
                 </div>
                 <div className="flex gap-4 border p-8 border-gray-200 md:w-1/2 rounded justify-center">
                   <button
-                    className="px-5 py-2.5 font-medium bg-red-50 hover:bg-red-100 hover:text-red-600 text-red-500 rounded-lg text-sm"
+                      className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg border-green-600   border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                     onClick={async () => {
                       try {
                         await axios.get(
-                          "http://34.148.188.181:4600/api/setup_model"
+                          `http://${IPAddress.address.ip_address}/api/setup_model`
                         );
                         alert("Request to start the model has been sent!");
                       } catch (error) {
@@ -255,13 +347,14 @@ const Admin = () => {
                     Start the Model
                   </button>
                   <button
-                    className="px-5 py-2.5 font-medium bg-red-50 hover:bg-red-100 hover:text-red-600 text-red-500 rounded-lg text-sm"
+                      className="cursor-pointer transition-all bg-green-500 text-white px-6 py-2 rounded-lg border-green-600  border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                     onClick={async () => {
                       try {
-                        await axios.get(
-                          "http://34.148.188.181:4600/api/check_health"
+                         const response = await axios.get(
+                          `http://${IPAddress.address.ip_address}/api/heath_check`  //we dont fking care about the http
                         );
                         alert("Request to check health the model has been sent!");
+                        console("Health check response: " + response.data);
                       } catch (error) {
                         console.error("Error:", error);
                         alert("There was an error in health the model.");
@@ -271,11 +364,11 @@ const Admin = () => {
                     check health
                   </button>
                   <button
-                    className="px-5 py-2.5 font-medium bg-red-50 hover:bg-red-100 hover:text-red-600 text-red-500 rounded-lg text-sm"
+                      className="cursor-pointer transition-all bg-red-500 text-white px-6 py-2 rounded-lg border-red-600   border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]   active:border-b-[2px] active:brightness-90 active:translate-y-[2px]"
                     onClick={async () => {
                       try {
                         await axios.get(
-                          "http://34.148.188.181:4600/api/shutdown"
+                            `http://${IPAddress.address.ip_address}/api/shutdown`
                         );
                         alert("Request to shutdown the model has been sent!");
                       } catch (error) {
