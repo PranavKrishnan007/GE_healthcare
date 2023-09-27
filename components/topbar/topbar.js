@@ -27,8 +27,8 @@ const TopBar = ({sideBar, setSidebar, admin}) => {
       <div className="text-xl flex flex-row gap-6 items-center justify-center font-bold text-black dark:text-white">
         {admin ? null : <button className="transition-all hover:scale-110 p-2 rounded-full duration-100" onClick={() => setSidebar(!sideBar)}><HiMiniBars4 /></button>}
          <Link href="/" className="flex flex-row gap-6 items-center justify-center">
-             <Image src={logo} alt={"oops image not found"} width={30} height={30} />
-             <div>BLEH</div>
+             {/*<Image src={logo} alt={"oops image not found"} width={30} height={30} />*/}
+             <div>bleh.</div>
          </Link>
       </div>
       <div className="flex flex-row items-center justify-center gap-3">

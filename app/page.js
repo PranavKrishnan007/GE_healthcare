@@ -1,23 +1,25 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import React from "react";
-import TopBar from "@/components/topbar/topbar";
+import { useEffect, useState, useRef } from 'react';
+import React from 'react';
+import TopBar from '@/components/topbar/topbar'
 import { doc, getDoc, updateDoc, arrayUnion, setDoc } from "firebase/firestore";
-import { db } from "@/app/firebase";
-import { UserAuth } from "@/app/context/AuthContext";
-import Image from "next/image";
-import axios from "axios";
-import Sidebar from "@/components/sidebar";
-import { AiOutlineUser } from "react-icons/ai";
-import { IoCloseCircleOutline } from "react-icons/io5";
-import { getSuggestions } from "@/app/admin/page";
-import Option from "@mui/joy/Option";
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import Select, { selectClasses } from "@mui/joy/Select";
+import { db } from '@/app/firebase'
+import { UserAuth } from '@/app/context/AuthContext'
+import Image from 'next/image'
+import axios from 'axios';
+import Sidebar from '@/components/sidebar'
+import { AiOutlineUser } from 'react-icons/ai'
+import { IoCloseCircleOutline } from 'react-icons/io5'
+import { getSuggestions } from '@/app/admin/page'
+import Option from '@mui/joy/Option';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Select, { selectClasses } from '@mui/joy/Select';
 import Preloader from "@/components/preloader/preloader";
-import logo from "@/assets/AI Avatar.svg";
+import logo from '@/assets/logo-no-background.svg';
 import Link from "next/link";
+
+
 
 export default function Home() {
   const { user } = UserAuth();
@@ -27,7 +29,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [congrats, setCongrats] = useState(false);
   const [historyMsg, setHistoryMsg] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const chat = useRef(null);
   const [language, setLanguage] = useState("en");
@@ -221,12 +223,12 @@ export default function Home() {
             const resp = translation;
             console.log(resp);
             return resp;
-            
+
           }
           else{
             return res;
           }
-          
+
         });
         console.log(response);
 
@@ -295,6 +297,7 @@ export default function Home() {
       return "Sorry, the bot is not functioning right now. Please try again later or you can choose from the suggestions options given below.";
     }
   }
+
 
   function BlobMessage({ message }) {
     return (
@@ -458,15 +461,10 @@ export default function Home() {
             >
               <div className="h-full rounded-3xl flex  flex-col items-center justify-center p-6 gap-5">
                 <div className="flex mt-96 flex-row">
-                  <Image
-                    src={logo}
-                    alt={"oops image not found"}
-                    width={35}
-                    height={35}
-                  />
-                  <p className="text-2xl dark:text-white  font-bold text-black px-3">
-                    BLEH
-                  </p>
+                  <Image src={logo} alt={"oops image not found"} width={65} />
+                  {/*<p className="text-2xl dark:text-white  font-bold text-black px-3">*/}
+                  {/*  bleh.*/}
+                  {/*</p>*/}
                 </div>
                 <div className="typewriter w-3/4 text-center mb-96">
                   Seeking reliable healthcare information, immediate assistance,
