@@ -21,21 +21,21 @@ const AboutPage = () => {
                 <div className=" bg-[#0F0E0E] overflow-hidden">
                     <div
                         className="flex justify-center backdrop-blur-sm items-center w-full fixed z-50 top-0 p-2  shadow-xl">
-                        <div className="flex w-[95%] mt-3 justify-center text-white font-bold px-6 rounded p-2 mx-auto">
+                        <div className="flex w-[95%] mt-3 justify-center text-gray-500 font-bold px-6 rounded p-2 mx-auto">
                             <div
-                                className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
+                                className="rounded-md hover:text-white hover:bg-black/50 px-4 py-2 text-gray-600 font-semibold"
                                 size="medium"><Link href={"#How_to_use"}>How to use?</Link>
                             </div>
                             <div
-                                className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
+                                className="rounded-md hover:text-white hover:bg-black/50 px-4 py-2 text-gray-600 font-semibold"
                                 size="medium"><Link href={"#"} >Home</Link>
                             </div>
                             <div
-                                className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
+                                className="rounded-md hover:text-white hover:bg-black/50 px-4 py-2 text-gray-600 font-semibold"
                                 size="medium"><Link href={"#chatbox"}>Chatbox</Link>
                             </div>
                             <div
-                                className="rounded-md hover:border-2 hover:border-black px-4 py-2 text-white font-semibold"
+                                className="rounded-md hover:text-white hover:bg-black/50 px-4 py-2 text-gray-600 font-semibold"
                                 size="medium"><Link href="/">Try it now</Link>
                             </div>
                         </div>
