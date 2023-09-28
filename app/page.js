@@ -71,7 +71,7 @@ export default function Home() {
       const url = new URL("/api/prompt", `http://${IPAddress.address.ip_address}/`);
 
       // Set any query parameters (if needed)
-      url.searchParams.append("prompt", userInput);
+      url.searchParams.append('prompt', userInput);
 
       const response = await fetch(url, {
         method: 'GET',
