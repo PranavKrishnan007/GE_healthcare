@@ -71,7 +71,7 @@ export default function Home() {
       const url = new URL("/api/prompt", `http://${IPAddress.address.ip_address}/`);
 
       // Set any query parameters (if needed)
-      url.searchParams.append('prompt', 'installation procedure for ipp module');
+      url.searchParams.append("prompt", userInput);
 
       const response = await fetch(url, {
         method: 'GET',
@@ -208,24 +208,36 @@ export default function Home() {
     const [botResponse, setBotResponse] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-      const fetchBotResponse = async () => {
-        let response = await BotResponse(message);
-        if (language !== 'en') {
-          const translation = await translateText(response, language);
-          response = translation.data.translatedText;
-        }
-        setBotResponse(response);
-        setIsLoading(false);
-      };
-      fetchBotResponse();
-    }, [message, language]);
+     useEffect(() => {
+       const fetchBotResponse = async () => {
+         let response = await BotResponse(message).then(async (res) => {
+           if (language !== "en") {
+             const translation = await translateText(res, language);
+             return translation;
+           } else {
+             return res;
+           }
+         });
 
-    const translateText = async (text, lang) => {
-      const url = `https://api.mymemory.translated.net/get?q=${text}&langpair=en|${lang}&de=pranavk0217@gmail.com`;
-      const result = await axios.get(url);
-      return result.data.responseData;
-    }
+         setBotResponse(response);
+         setIsLoading(false);
+       };
+       fetchBotResponse();
+     }, [message, language]);
+
+     const translateText = async (text, lang) => {
+       try {
+         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+           text
+         )}&langpair=en|${lang}`;
+         const response = await axios.get(url);
+         const translation = response.data.responseData.translatedText;
+         return translation;
+       } catch (error) {
+         console.error(error);
+         return text; // Return the original text if translation fails
+       }
+     };
 
     const typing = botResponse?.split('').map((char, index) => (
       <span key={index} style={{ animationDelay: index * 0.03 + 's' }}>{char}</span>
