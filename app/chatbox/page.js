@@ -19,6 +19,17 @@ import Preloader from "@/components/preloader/preloader";
 import logo from '@/assets/AI Avatar.svg';
 import Link from "next/link";
 
+export const getIPAddress = async () => {
+  try {
+    const docRef = doc(db, "ip", "address");
+    const docSnap = await getDoc(docRef);
+    // console.log(docSnap.data(), "from firebase");
+    return docSnap.data(); // Provide a default if data is undefined
+  } catch (error) {
+    console.log("Error getting suggestions: ", error);
+    // Handle the error and provide a default value
+  }
+};
 
 
 
@@ -38,6 +49,13 @@ export default function Home() {
     const [language, setLanguage] = useState("en");
     const [selectedValue, setSelectedValue] = useState("");
     const [toggle, setToggle] = useState(false);
+      const [IPAddress, setIPAddress] = useState("");
+      
+
+
+    useEffect(() => {
+      getIPAddress().then((address) => setIPAddress(address));
+    }, []);
 
     useEffect(() => {
       if (chat.current) {
@@ -64,7 +82,10 @@ export default function Home() {
     async function sendChatQuery(userInput) {
       try {
         // Define the URL with query parameters
-        const url = new URL("/api/prompt", "http://35.229.27.195:4500");
+        const url = new URL(
+          "/api/prompt",
+          `http://${IPAddress.address.ip_address}/`
+        );
 
         // Set any query parameters (if needed)
         url.searchParams.append("prompt", { userInput });
@@ -344,6 +365,7 @@ export default function Home() {
           console.log(res);
         });
     };
+
 
     return (
       <div className="bg-white items-center my-auto border-2 px-auto w-full dark:bg-black transition-all ease-in-out h-screen  pt-3 overflow-hidden flex no-scrollbar flex-col">

@@ -46,7 +46,7 @@ const Admin = () => {
   const [suggestion, setSuggestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [IPAddress, setIPAddress] = useState('');
-  const notify = () => toast("Wow so easy!");
+  const notify = () => toast("Uploaded pdf!");
   const setup_model = () => toast("Request to setup the model has been sent!");
   const setup_model_error = () => toast("Request to setup the model has been sent!");
   const health_check = () => toast("Request to check health the model has been sent!");
@@ -175,10 +175,12 @@ const Admin = () => {
       // Create a storage reference and upload the file
       const storageRef = ref(storage, `pdfs/${file.name}`);
       await uploadBytes(storageRef, file);
-
+notify()
       // Store a reference to the uploaded file in Firestore
       const docData = {
+
         pdfUrl: `pdfs/${file.name}`,
+
       };
       await setDoc(doc(db, "pdfs", file.name), docData);
 
