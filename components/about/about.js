@@ -24,10 +24,6 @@ const AboutPage = () => {
                         <div className="flex w-[95%] mt-3 justify-center text-gray-500 font-bold px-6 rounded p-2 mx-auto">
                             <div
                                 className="rounded-md hover:text-white hover:bg-black/50 px-4 py-2 text-gray-600 font-semibold"
-                                size="medium"><Link href={"#How_to_use"}>How to use?</Link>
-                            </div>
-                            <div
-                                className="rounded-md hover:text-white hover:bg-black/50 px-4 py-2 text-gray-600 font-semibold"
                                 size="medium"><Link href={"#"} >Home</Link>
                             </div>
                             <div

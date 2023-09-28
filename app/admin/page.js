@@ -245,7 +245,7 @@ const Admin = () => {
                 <div className="mt-8 max-w-[400px] mb-4 font-mono">
                   endpoint:
                   <p>
-                    { IPAddress && `http://${IPAddress.address.ip_address}/`}
+                    { IPAddress && `http://${IPAddress.address?.ip_address}/`}
                   </p>
                 </div>
                 <button
